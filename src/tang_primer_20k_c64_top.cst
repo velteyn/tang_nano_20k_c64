@@ -1,0 +1,61 @@
+// NOTE: This is a placeholder file. The pin locations need to be
+// verified for the Tang Primer 20k board.
+
+// Clock and Reset
+// IO_LOC "clk"
+// IO_LOC "reset"
+
+// LEDs
+// IO_LOC "leds_n[0]"
+// IO_LOC "leds_n[1]"
+
+// UART
+// IO_LOC "uart_rx"
+// IO_LOC "uart_tx"
+
+// SPI to uC
+// IO_LOC "m0s[0]"
+// IO_LOC "m0s[1]"
+// IO_LOC "m0s[2]"
+// IO_LOC "m0s[3]"
+// IO_LOC "m0s[4]"
+
+// HDMI
+// IO_LOC "tmds_clk_p"
+// IO_LOC "tmds_d_p[0]"
+// IO_LOC "tmds_d_p[1]"
+// IO_LOC "tmds_d_p[2]"
+
+// SD card
+// IO_LOC "sd_clk"
+// IO_LOC "sd_cmd"
+// IO_LOC "sd_dat[0]"
+// IO_LOC "sd_dat[1]"
+// IO_LOC "sd_dat[2]"
+// IO_LOC "sd_dat[3]"
+
+// DDR3 Memory Interface
+// IO_LOC "ddr3_a[0]"
+// ...
+// IO_LOC "ddr3_a[14]"
+// IO_LOC "ddr3_ba[0]"
+// ...
+// IO_LOC "ddr3_ba[2]"
+// IO_LOC "ddr3_ck_p"
+// IO_LOC "ddr3_ck_n"
+// IO_LOC "ddr3_cke"
+// IO_LOC "ddr3_cs_n"
+// IO_LOC "ddr3_ras_n"
+// IO_LOC "ddr3_cas_n"
+// IO_LOC "ddr3_we_n"
+// IO_LOC "ddr3_reset_n"
+// IO_LOC "ddr3_dq[0]"
+// ...
+// IO_LOC "ddr3_dq[15]"
+// IO_LOC "ddr3_dqs_p[0]"
+// IO_LOC "ddr3_dqs_p[1]"
+// IO_LOC "ddr3_dqs_n[0]"
+// IO_LOC "ddr3_dqs_n[1]"
+// IO_LOC "ddr3_odt"
+// IO_LOC "ddr3_dm[0]"
+// IO_LOC "ddr3_dm[1]"
