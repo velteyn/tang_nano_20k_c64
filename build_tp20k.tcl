@@ -1,5 +1,8 @@
 set_device GW2A-LV18PG256C8/I7 -name GW2A-18C
 
+add_file src/ddr3_controller.v
+add_file src/gowin_rpll/gowin_rpll.v
+
 add_file src/acia.v
 add_file src/c1541/mist_sd_card.sv
 add_file src/cartridge.v
@@ -30,7 +33,6 @@ add_file src/misc/video_analyzer.v
 add_file src/misc/ws2812.v
 add_file src/mos6526.v
 add_file src/reu.v
-add_file src/sdram.v
 add_file src/c1541/c1541_logic.vhd
 add_file src/c1541/c1541_sd.vhd
 add_file src/c1541/gcr_floppy.vhd
@@ -53,9 +55,6 @@ add_file src/t65/T65_MCode.vhd
 add_file src/t65/T65_Pack.vhd
 add_file src/tang_primer_20k_c64_top.vhd
 add_file src/video_vicII_656x.vhd
-add_file src/gowin_pll/gowin_pll_pal.vhd
-add_file src/gowin_pll/gowin_pll_ntsc.vhd
-add_file src/gowin_pll/gowin_pll_flash.vhd
 add_file src/tang_primer_20k_c64_top.cst
 add_file src/tang_primer_20k_c64_top.sdc
 add_file src/loader_sd_card.sv

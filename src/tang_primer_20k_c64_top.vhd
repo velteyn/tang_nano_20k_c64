@@ -6,8 +6,6 @@
 --  FPGA64 is Copyrighted 2005-2008 by Peter Wendrich (pwsoft@syntiac.com)
 --  http://www.syntiac.com/fpga64.html
 --
---  NOTE: This is a placeholder file. The pinout and DDR3 controller
---  are based on assumptions and need to be verified.
 -------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -47,8 +45,8 @@ entity tang_primer_20k_c64_top is
     sd_cmd      : inout std_logic;
     sd_dat      : inout std_logic_vector(3 downto 0);
 
-    -- DDR3 Memory Interface (Placeholder)
-    ddr3_a      : out std_logic_vector(14 downto 0);
+    -- DDR3 Memory Interface
+    ddr3_a      : out std_logic_vector(13 downto 0);
     ddr3_ba     : out std_logic_vector(2 downto 0);
     ddr3_ck_p   : out std_logic;
     ddr3_ck_n   : out std_logic;
@@ -68,19 +66,26 @@ end;
 
 architecture Behavioral_top of tang_primer_20k_c64_top is
 
-  -- This is a placeholder architecture.
-  -- A real implementation would require a DDR3 controller.
-  -- For now, we will just instantiate the C64 core and leave the
-  -- memory interface unconnected.
-
+  signal clk_x4 : std_logic;
+  signal clk_ck : std_logic;
   signal clk32 : std_logic;
   signal pll_locked : std_logic;
-  signal c64_addr : unsigned(15 downto 0);
+
+  signal c64_addr : unsigned(25 downto 0);
   signal sdram_data : unsigned(7 downto 0);
   signal c64_data_out : unsigned(7 downto 0);
   signal ram_ce : std_logic;
   signal ram_we : std_logic;
   signal idle : std_logic;
+
+  signal ddr3_busy : std_logic;
+  signal ddr3_data_ready : std_logic;
+  signal ddr3_dout : std_logic_vector(15 downto 0);
+  signal ddr3_din : std_logic_vector(15 downto 0);
+  signal ddr3_rd : std_logic;
+  signal ddr3_wr : std_logic;
+  signal ddr3_refresh : std_logic;
+
   signal ntscMode : std_logic;
   signal hsync : std_logic;
   signal vsync : std_logic;
@@ -96,11 +101,123 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal pot3 : std_logic_vector(7 downto 0);
   signal pot4 : std_logic_vector(7 downto 0);
 
+  component Gowin_rPLL is
+    port (
+        clkout: out std_logic;
+        clkoutp: out std_logic;
+        lock: out std_logic;
+        clkoutd: out std_logic;
+        clkin: in std_logic
+    );
+  end component;
+
+  component ddr3_controller is
+    generic (
+      ROW_WIDTH: integer := 13;
+      COL_WIDTH: integer := 10;
+      BANK_WIDTH: integer := 3
+    );
+    port (
+      pclk: in std_logic;
+      fclk: in std_logic;
+      ck: in std_logic;
+      resetn: in std_logic;
+      rd: in std_logic;
+      wr: in std_logic;
+      refresh: in std_logic;
+      addr: in std_logic_vector(25 downto 0);
+      din: in std_logic_vector(15 downto 0);
+      dout: out std_logic_vector(15 downto 0);
+      dout128: out std_logic_vector(127 downto 0);
+      data_ready: out std_logic;
+      busy: out std_logic;
+      write_level_done: out std_logic;
+      wstep: out std_logic_vector(7 downto 0);
+      read_calib_done: out std_logic;
+      rclkpos: out std_logic_vector(1 downto 0);
+      rclksel: out std_logic_vector(2 downto 0);
+      debug: out std_logic_vector(63 downto 0);
+      DDR3_DQ: inout std_logic_vector(15 downto 0);
+      DDR3_DQS: inout std_logic_vector(1 downto 0);
+      DDR3_A: out std_logic_vector(13 downto 0);
+      DDR3_BA: out std_logic_vector(2 downto 0);
+      DDR3_nRAS: out std_logic;
+      DDR3_nCAS: out std_logic;
+      DDR3_nWE: out std_logic;
+      DDR3_nCS: out std_logic;
+      DDR3_CK: out std_logic;
+      DDR3_CKE: out std_logic;
+      DDR3_nRESET: out std_logic;
+      DDR3_DM: out std_logic_vector(1 downto 0);
+      DDR3_ODT: out std_logic
+    );
+  end component;
+
 begin
 
-  -- Dummy clock generation
-  pll_locked <= '1';
-  clk32 <= clk;
+  pll_inst: Gowin_rPLL
+    port map (
+      clkout => clk_x4,
+      clkoutp => clk_ck,
+      lock => pll_locked,
+      clkoutd => clk32,
+      clkin => clk
+    );
+
+  ddr3_controller_inst: ddr3_controller
+    port map (
+      pclk => clk32,
+      fclk => clk_x4,
+      ck => clk_ck,
+      resetn => reset and pll_locked,
+      rd => ddr3_rd,
+      wr => ddr3_wr,
+      refresh => ddr3_refresh,
+      addr => std_logic_vector(c64_addr),
+      din => ddr3_din,
+      dout => ddr3_dout,
+      data_ready => ddr3_data_ready,
+      busy => ddr3_busy,
+      DDR3_DQ => ddr3_dq,
+      DDR3_DQS => ddr3_dqs_p,
+      DDR3_A => ddr3_a(12 downto 0),
+      DDR3_BA => ddr3_ba,
+      DDR3_nRAS => ddr3_ras_n,
+      DDR3_nCAS => ddr3_cas_n,
+      DDR3_nWE => ddr3_we_n,
+      DDR3_nCS => ddr3_cs_n,
+      DDR3_CK => ddr3_ck_p,
+      DDR3_CKE => ddr3_cke,
+      DDR3_nRESET => ddr3_reset_n,
+      DDR3_DM => ddr3_dm,
+      DDR3_ODT => ddr3_odt,
+      write_level_done => open,
+      wstep => open,
+      read_calib_done => open,
+      rclkpos => open,
+      rclksel => open,
+      debug => open,
+      dout128 => open
+    );
+
+  -- Memory interface bridge
+  process(clk32)
+  begin
+    if rising_edge(clk32) then
+      ddr3_rd <= '0';
+      ddr3_wr <= '0';
+      if ram_ce = '1' and ddr3_busy = '0' then
+        if ram_we = '1' then
+          ddr3_wr <= '1';
+        else
+          ddr3_rd <= '1';
+        end if;
+      end if;
+    end if;
+  end process;
+
+  ddr3_din <= std_logic_vector(c64_data_out) & std_logic_vector(c64_data_out); -- 8 to 16 bit
+  sdram_data <= unsigned(ddr3_dout(7 downto 0));
 
   -- Instantiate the C64 core
   fpga64_sid_iec_inst: entity work.fpga64_sid_iec
@@ -108,8 +225,7 @@ begin
   (
     clk32        => clk32,
     reset_n      => reset,
-    -- ... (other ports connected to dummy signals)
-    ramAddr      => c64_addr,
+    ramAddr      => c64_addr(15 downto 0),
     ramDin       => sdram_data,
     ramDout      => c64_data_out,
     ramCE        => ram_ce,
@@ -131,7 +247,6 @@ begin
     pot2         => pot2,
     pot3         => pot3,
     pot4         => pot4,
-    -- ... (rest of the ports)
     bios         => "00",
     pause        => '0',
     pause_out    => open,
@@ -211,8 +326,6 @@ begin
     debugY       => open
   );
 
-  -- Dummy memory connection
-  sdram_data <= (others => '0');
   idle <= '0';
 
 end Behavioral_top;
