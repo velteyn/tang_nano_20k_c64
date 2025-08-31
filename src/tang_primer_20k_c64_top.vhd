@@ -128,7 +128,7 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
 
   component ddr3_controller is
     generic (
-      ROW_WIDTH: integer := 13;
+      ROW_WIDTH: integer := 14;
       COL_WIDTH: integer := 10;
       BANK_WIDTH: integer := 3
     );
@@ -140,7 +140,7 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
       rd: in std_logic;
       wr: in std_logic;
       refresh: in std_logic;
-      addr: in std_logic_vector(25 downto 0);
+      addr: in std_logic_vector(26 downto 0);
       din: in std_logic_vector(15 downto 0);
       dout: out std_logic_vector(15 downto 0);
       dout128: out std_logic_vector(127 downto 0);
@@ -293,7 +293,7 @@ begin
     freeze_key   => freeze_key_s,
     mod_key      => mod_key_s,
     tape_play    => tape_play_s,
-    dma_req      => open,
+    dma_req      => '0',
     dma_cycle    => open,
     dma_addr     => dma_addr_s,
     dma_dout     => dma_dout_s,
@@ -312,7 +312,7 @@ begin
     sid_ld_wr    => '0',
     sid_digifix  => '0',
     pb_i         => (others => '0'),
-    std_logic_vector(pb_o) => pb_o_s,
+    pb_o         => pb_o_s,
     pa2_i        => '0',
     pa2_o        => open,
     pc2_n_o      => open,
