@@ -71,8 +71,8 @@ module ddr3_controller
     input      [15:0] din,          // 16-bit data input
     output    [15:0]  dout,         // word output
     output    [127:0] dout128,      // 128-bit data output
-    output reg        data_ready = 1'b0,   // available 6 cycles after wr is set
-    output reg        busy = 1'b1,  // 0: ready for next command
+    output reg        data_ready,   // available 6 cycles after wr is set
+    output reg        busy,  // 0: ready for next command
 
     // Write leveling. This is done after mode registers are set.
     output            write_level_done,  // 1 means write leveling is successful for this DQS
@@ -122,6 +122,11 @@ typedef logic [4:0] FIVEB;
 reg [7:0] cnt_read = 0;
 reg [7:0] cnt_write = 0;
 assign debug = {cnt_write, cnt_read, BYTE'(state)};
+
+initial begin
+    data_ready = 1'b0;
+    busy = 1'b1;
+end
 
 // Output signals
 reg nRAS[3:0], nCAS[3:0], nWE[3:0];

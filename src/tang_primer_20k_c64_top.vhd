@@ -101,6 +101,21 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal pot3 : std_logic_vector(7 downto 0);
   signal pot4 : std_logic_vector(7 downto 0);
 
+  signal nmi_ack_s : std_logic;
+  signal romL_s : std_logic;
+  signal romH_s : std_logic;
+  signal UMAXromH_s : std_logic;
+  signal IO7_s : std_logic;
+  signal IOE_s : std_logic;
+  signal IOF_s : std_logic;
+  signal freeze_key_s : std_logic;
+  signal mod_key_s : std_logic;
+  signal tape_play_s : std_logic;
+  signal dma_din_s : unsigned(7 downto 0);
+  signal dma_addr_s : std_logic_vector(15 downto 0);
+  signal dma_dout_s : std_logic_vector(7 downto 0);
+  signal pb_o_s : std_logic_vector(7 downto 0);
+
   component Gowin_rPLL is
     port (
         clkout: out std_logic;
@@ -268,21 +283,21 @@ begin
     io_data      => (others => '0'),
     irq_n        => '1',
     nmi_n        => '1',
-    nmi_ack      => '0',
-    romL         => '0',
-    romH         => '0',
-    UMAXromH     => '0',
-    IO7          => '0',
-    IOE          => '0',
-    IOF          => '0',
-    freeze_key   => '0',
-    mod_key      => '0',
-    tape_play    => '0',
+    nmi_ack      => nmi_ack_s,
+    romL         => romL_s,
+    romH         => romH_s,
+    UMAXromH     => UMAXromH_s,
+    IO7          => IO7_s,
+    IOE          => IOE_s,
+    IOF          => IOF_s,
+    freeze_key   => freeze_key_s,
+    mod_key      => mod_key_s,
+    tape_play    => tape_play_s,
     dma_req      => open,
     dma_cycle    => open,
-    dma_addr     => (others => '0'),
-    dma_dout     => (others => '0'),
-    dma_din      => (others => '0'),
+    dma_addr     => dma_addr_s,
+    dma_dout     => dma_dout_s,
+    dma_din      => dma_din_s,
     dma_we       => '0',
     irq_ext_n    => '1',
     sid_filter   => "00",
@@ -297,7 +312,7 @@ begin
     sid_ld_wr    => '0',
     sid_digifix  => '0',
     pb_i         => (others => '0'),
-    std_logic_vector(pb_o) => open,
+    std_logic_vector(pb_o) => pb_o_s,
     pa2_i        => '0',
     pa2_o        => open,
     pc2_n_o      => open,
