@@ -112,9 +112,9 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal mod_key_s : std_logic;
   signal tape_play_s : std_logic;
   signal dma_din_s : unsigned(7 downto 0);
-  signal dma_addr_s : std_logic_vector(15 downto 0);
-  signal dma_dout_s : std_logic_vector(7 downto 0);
-  signal pb_o_s : std_logic_vector(7 downto 0);
+  signal dma_addr_s : unsigned(15 downto 0);
+  signal dma_dout_s : unsigned(7 downto 0);
+  signal pb_o_s : unsigned(7 downto 0);
 
   component Gowin_rPLL is
     port (
