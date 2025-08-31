@@ -195,7 +195,7 @@ begin
       busy => ddr3_busy,
       DDR3_DQ => ddr3_dq,
       DDR3_DQS => ddr3_dqs_p,
-      DDR3_A => ddr3_a(12 downto 0),
+      DDR3_A => ddr3_a,
       DDR3_BA => ddr3_ba,
       DDR3_nRAS => ddr3_ras_n,
       DDR3_nCAS => ddr3_cas_n,
@@ -340,7 +340,5 @@ begin
     debugX       => open,
     debugY       => open
   );
-
-  idle <= '0';
 
 end Behavioral_top;
