@@ -71,7 +71,7 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal clk32 : std_logic;
   signal pll_locked : std_logic;
 
-  signal c64_addr : unsigned(25 downto 0);
+  signal c64_addr : unsigned(26 downto 0);
   signal sdram_data : unsigned(7 downto 0);
   signal c64_data_out : unsigned(7 downto 0);
   signal ram_ce : std_logic;
@@ -180,6 +180,9 @@ begin
     );
 
   ddr3_controller_inst: ddr3_controller
+    generic map (
+      ROW_WIDTH => 14
+    )
     port map (
       pclk => clk32,
       fclk => clk_x4,
