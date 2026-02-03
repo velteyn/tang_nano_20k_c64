@@ -13,7 +13,9 @@ use IEEE.std_logic_1164.all;
 entity Gowin_rPLL is
     port (
         clkout: out std_logic;
+        clkoutp: out std_logic;
         lock: out std_logic;
+        clkoutd: out std_logic;
         clkin: in std_logic
     );
 end Gowin_rPLL;
@@ -78,6 +80,8 @@ architecture Behavioral of Gowin_rPLL is
 
 begin
     gw_gnd <= '0';
+    clkoutp <= clkoutp_o;
+    clkoutd <= clkoutd_o;
 
     FBDSEL_i <= gw_gnd & gw_gnd & gw_gnd & gw_gnd & gw_gnd & gw_gnd;
     IDSEL_i <= gw_gnd & gw_gnd & gw_gnd & gw_gnd & gw_gnd & gw_gnd;
@@ -93,11 +97,11 @@ begin
             DYN_IDIV_SEL => "false",
             IDIV_SEL => 2,
             DYN_FBDIV_SEL => "false",
-            FBDIV_SEL => 6,
+            FBDIV_SEL => 34,
             DYN_ODIV_SEL => "false",
-            ODIV_SEL => 8,
-            PSDA_SEL => "0000",
-            DYN_DA_EN => "true",
+            ODIV_SEL => 2,
+            PSDA_SEL => "0110",
+            DYN_DA_EN => "false",
             DUTYDA_SEL => "1000",
             CLKOUT_FT_DIR => '1',
             CLKOUTP_FT_DIR => '1',
@@ -107,7 +111,7 @@ begin
             CLKOUT_BYPASS => "false",
             CLKOUTP_BYPASS => "false",
             CLKOUTD_BYPASS => "false",
-            DYN_SDIV_SEL => 2,
+            DYN_SDIV_SEL => 5,
             CLKOUTD_SRC => "CLKOUT",
             CLKOUTD3_SRC => "CLKOUT"
         )

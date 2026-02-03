@@ -175,7 +175,7 @@ hdmi #(
 );
 
 // differential output
-ELVDS_OBUF tmds_bufds [3:0] (
+TLVDS_OBUF tmds_bufds [3:0] (
         .I({tmds_clock, tmds}),
         .O({tmds_clk_p, tmds_d_p}),
         .OB({tmds_clk_n, tmds_d_n})

@@ -22,7 +22,7 @@ entity tang_primer_20k_c64_top is
   port
   (
     clk         : in std_logic;
-    reset       : in std_logic; -- S2 button
+    -- reset       : in std_logic; -- S2 button (Moved to internal reset)
 
     -- LEDs
     leds_n      : out std_logic_vector(1 downto 0);
@@ -70,6 +70,15 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal clk_ck : std_logic;
   signal clk32 : std_logic;
   signal pll_locked : std_logic;
+  
+  -- Internal Reset
+  signal reset_n_s : std_logic := '0';
+  signal reset_cnt : unsigned(19 downto 0) := (others => '0');
+
+  -- DDR3 Reset Synchronization
+  signal ddr3_rst_sync1 : std_logic := '0';
+  signal ddr3_rst_sync2 : std_logic := '0';
+  signal ddr3_reset_n_sync : std_logic := '0';
 
   signal c64_addr : unsigned(26 downto 0);
   signal sdram_data : unsigned(7 downto 0);
@@ -115,6 +124,9 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal dma_addr_s : unsigned(15 downto 0);
   signal dma_dout_s : unsigned(7 downto 0);
   signal pb_o_s : unsigned(7 downto 0);
+  
+  signal audio_div : unsigned(8 downto 0);
+  signal osd_status : std_logic;
 
   component Gowin_rPLL is
     port (
@@ -168,6 +180,34 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
     );
   end component;
 
+  component video is
+    port (
+      clk: in std_logic;
+      clk_pixel_x5: in std_logic;
+      pll_lock: in std_logic;
+      audio_div: in unsigned(8 downto 0);
+      ntscmode: in std_logic;
+      vs_in_n: in std_logic;
+      hs_in_n: in std_logic;
+      r_in: in unsigned(3 downto 0);
+      g_in: in unsigned(3 downto 0);
+      b_in: in unsigned(3 downto 0);
+      audio_l: in std_logic_vector(17 downto 0);
+      audio_r: in std_logic_vector(17 downto 0);
+      osd_status: out std_logic;
+      mcu_start: in std_logic;
+      mcu_osd_strobe: in std_logic;
+      mcu_data: in std_logic_vector(7 downto 0);
+      system_scanlines: in std_logic_vector(1 downto 0);
+      system_volume: in std_logic_vector(1 downto 0);
+      system_wide_screen: in std_logic;
+      tmds_clk_n: out std_logic;
+      tmds_clk_p: out std_logic;
+      tmds_d_n: out std_logic_vector(2 downto 0);
+      tmds_d_p: out std_logic_vector(2 downto 0)
+    );
+  end component;
+
 begin
 
   pll_inst: Gowin_rPLL
@@ -179,6 +219,16 @@ begin
       clkin => clk
     );
 
+  -- Synchronize reset to clk_x4 domain for DDR3 controller
+  process(clk_x4)
+  begin
+    if rising_edge(clk_x4) then
+      ddr3_rst_sync1 <= reset_n_s and pll_locked;
+      ddr3_rst_sync2 <= ddr3_rst_sync1;
+      ddr3_reset_n_sync <= ddr3_rst_sync2;
+    end if;
+  end process;
+
   ddr3_controller_inst: ddr3_controller
     generic map (
       ROW_WIDTH => 14
@@ -187,7 +237,7 @@ begin
       pclk => clk32,
       fclk => clk_x4,
       ck => clk_ck,
-      resetn => reset and pll_locked,
+      resetn => ddr3_reset_n_sync,
       rd => ddr3_rd,
       wr => ddr3_wr,
       refresh => ddr3_refresh,
@@ -222,6 +272,14 @@ begin
   process(clk32)
   begin
     if rising_edge(clk32) then
+       -- Internal Reset Generation
+       if reset_cnt < "11111111111111111111" then
+          reset_cnt <= reset_cnt + 1;
+          reset_n_s <= '0';
+       else
+          reset_n_s <= '1';
+       end if;
+
       ddr3_rd <= '0';
       ddr3_wr <= '0';
       if ram_ce = '1' and ddr3_busy = '0' then
@@ -238,11 +296,33 @@ begin
   sdram_data <= unsigned(ddr3_dout(7 downto 0));
 
   -- Instantiate the C64 core
+  -- UART driver
+  uart_tx <= '1';
+  
+  -- Default values for unused inputs
+  ntscMode <= '0'; -- PAL
+  joyA <= (others => '1'); -- Released (Active Low)
+  joyB <= (others => '1');
+  pot1 <= (others => '0');
+  pot2 <= (others => '0');
+  pot3 <= (others => '0');
+  pot4 <= (others => '0');
+  
+  -- Unused ports
+  m0s <= (others => 'Z');
+  sd_clk <= '0';
+  sd_cmd <= 'Z';
+  sd_dat <= (others => 'Z');
+
+  audio_div  <= to_unsigned(342,9) when ntscMode = '1' else to_unsigned(327,9);
+  leds_n(0) <= not pll_locked; -- LED on when PLL is locked (if active low)
+  leds_n(1) <= '1'; -- Off
+
   fpga64_sid_iec_inst: entity work.fpga64_sid_iec
   port map
   (
     clk32        => clk32,
-    reset_n      => reset,
+    reset_n      => reset_n_s,
     ramAddr      => c64_addr(15 downto 0),
     ramDin       => sdram_data,
     ramDout      => c64_data_out,
@@ -259,6 +339,42 @@ begin
     b            => b,
     audio_l      => audio_data_l,
     audio_r      => audio_data_r,
+    
+    -- audio_data   => audio_data_l(17 downto 2),
+    -- audio_data   => open,
+    
+    -- USER
+    pb_i => (others => '0'),
+    pb_o => open,
+    pa2_i => '0',
+    pa2_o => open,
+    pc2_n_o => open,
+    flag2_n_i => '0',
+    sp2_i => '0',
+    sp2_o => open,
+    sp1_i => '0',
+    sp1_o => open,
+    cnt2_i => '0',
+    cnt2_o => open,
+    cnt1_i => '0',
+    cnt1_o => open,
+
+    -- IEC
+    iec_data_o => open,
+    iec_data_i => '0',
+    iec_clk_o => open,
+    iec_clk_i => '0',
+    iec_atn_o => open,
+
+    c64rom_addr => (others => '0'),
+    c64rom_data => (others => '0'),
+    c64rom_wr => '0',
+
+    cass_motor => open,
+    cass_write => open,
+    cass_sense => '0',
+    cass_read => '0',
+
     joyA         => joyA,
     joyB         => joyB,
     pot1         => pot1,
@@ -314,34 +430,35 @@ begin
     sid_ld_data  => (others => '0'),
     sid_ld_wr    => '0',
     sid_digifix  => '0',
-    pb_i         => (others => '0'),
-    pb_o         => pb_o_s,
-    pa2_i        => '0',
-    pa2_o        => open,
-    pc2_n_o      => open,
-    flag2_n_i    => '0',
-    sp2_i        => '0',
-    sp2_o        => open,
-    sp1_i        => '0',
-    sp1_o        => open,
-    cnt2_i       => '0',
-    cnt2_o       => open,
-    cnt1_i       => '0',
-    cnt1_o       => open,
-    iec_data_o   => open,
-    iec_data_i   => '0',
-    iec_clk_o    => open,
-    iec_clk_i    => '0',
-    iec_atn_o    => open,
-    c64rom_addr  => (others => '0'),
-    c64rom_data  => (others => '0'),
-    c64rom_wr    => '0',
-    cass_motor   => open,
-    cass_write   => open,
-    cass_sense   => '0',
-    cass_read    => '0',
     debugX       => open,
     debugY       => open
+  );
+
+  video_inst: video
+  port map (
+    clk => clk32,
+    clk_pixel_x5 => clk_x4, -- 160MHz
+    pll_lock => pll_locked,
+    audio_div => audio_div,
+    ntscmode => ntscMode,
+    vs_in_n => vsync, -- Check polarity
+    hs_in_n => hsync, -- Check polarity
+    r_in => r(7 downto 4),
+    g_in => g(7 downto 4),
+    b_in => b(7 downto 4),
+    audio_l => audio_data_l,
+    audio_r => audio_data_r,
+    osd_status => osd_status,
+    mcu_start => '0',
+    mcu_osd_strobe => '0',
+    mcu_data => (others => '0'),
+    system_scanlines => "00", -- Default no scanlines? Or "01"?
+    system_volume => "01", -- Enable volume to prevent audio logic sweeping
+    system_wide_screen => '0',
+    tmds_clk_n => tmds_clk_n,
+    tmds_clk_p => tmds_clk_p,
+    tmds_d_n => tmds_d_n,
+    tmds_d_p => tmds_d_p
   );
 
 end Behavioral_top;
