@@ -69,6 +69,7 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal clk_x4 : std_logic;
   signal clk_ck : std_logic;
   signal clk32 : std_logic;
+  signal clk_ddr : std_logic;
   signal pll_locked : std_logic;
   
   -- Internal Reset
@@ -95,9 +96,39 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal ddr3_wr : std_logic;
   signal ddr3_refresh : std_logic;
 
-  signal ntscMode : std_logic;
+  -- CDC Signals
+  signal req_toggle : std_logic := '0';
+  signal ack_toggle : std_logic := '0';
+  signal ack_sync1, ack_sync2 : std_logic := '0';
+  signal req_sync1, req_sync2 : std_logic := '0';
+  signal req_prev : std_logic := '0';
+  
+  signal ddr_cmd_reg : std_logic; -- 0:Read, 1:Write
+  signal ddr_addr_reg : std_logic_vector(26 downto 0);
+  signal ddr_din_reg : std_logic_vector(15 downto 0);
+  signal ddr_dout_reg : std_logic_vector(15 downto 0);
+  
+  signal mem_busy : std_logic := '0';
+   
+   type cdc_state_t is (S_IDLE, S_ISSUE, S_WAIT_READ, S_WAIT_WRITE);
+   signal cdc_state : cdc_state_t := S_IDLE;
+ 
+   signal ntscMode : std_logic;
   signal hsync : std_logic;
   signal vsync : std_logic;
+  
+  component CLKDIV
+      generic (
+          DIV_MODE : string := "2";
+          GSREN : string := "false"
+      );
+      port (
+          CLKOUT : out std_logic;
+          HCLKIN : in std_logic;
+          RESETN : in std_logic;
+          CALIB : in std_logic
+      );
+  end component;
   signal r : unsigned(7 downto 0);
   signal g : unsigned(7 downto 0);
   signal b : unsigned(7 downto 0);
@@ -219,6 +250,17 @@ begin
       clkin => clk
     );
 
+  u_clkdiv: CLKDIV
+    generic map (
+        DIV_MODE => "4"
+    )
+    port map (
+        CLKOUT => clk_ddr,
+        HCLKIN => clk_x4,
+        RESETN => pll_locked,
+        CALIB => '0'
+    );
+
   -- Synchronize reset to clk_x4 domain for DDR3 controller
   process(clk_x4)
   begin
@@ -234,15 +276,15 @@ begin
       ROW_WIDTH => 14
     )
     port map (
-      pclk => clk32,
+      pclk => clk_ddr,
       fclk => clk_x4,
       ck => clk_ck,
       resetn => ddr3_reset_n_sync,
       rd => ddr3_rd,
       wr => ddr3_wr,
       refresh => ddr3_refresh,
-      addr => std_logic_vector(c64_addr),
-      din => ddr3_din,
+      addr => ddr_addr_reg,
+      din => ddr_din_reg,
       dout => ddr3_dout,
       data_ready => ddr3_data_ready,
       busy => ddr3_busy,
@@ -268,7 +310,9 @@ begin
       dout128 => open
     );
 
-  -- Memory interface bridge
+  -- Memory interface bridge (CDC)
+  
+  -- Master Process (clk32 domain)
   process(clk32)
   begin
     if rising_edge(clk32) then
@@ -280,24 +324,86 @@ begin
           reset_n_s <= '1';
        end if;
 
-      ddr3_rd <= '0';
-      ddr3_wr <= '0';
-      if ram_ce = '1' and ddr3_busy = '0' then
-        if ram_we = '1' then
-          ddr3_wr <= '1';
-        else
-          ddr3_rd <= '1';
+      -- Sync ack from DDR domain
+      ack_sync1 <= ack_toggle;
+      ack_sync2 <= ack_sync1;
+
+      if mem_busy = '0' then
+        if ram_ce = '1' then
+          -- Start transaction
+          mem_busy <= '1';
+          ddr_addr_reg <= std_logic_vector(c64_addr);
+          ddr_din_reg <= std_logic_vector(c64_data_out) & std_logic_vector(c64_data_out);
+          if ram_we = '1' then
+             ddr_cmd_reg <= '1'; -- Write
+          else
+             ddr_cmd_reg <= '0'; -- Read
+          end if;
+          req_toggle <= not req_toggle;
+        end if;
+      else
+        -- Wait for ack
+        if ack_sync2 = req_toggle then
+          mem_busy <= '0';
+          if ddr_cmd_reg = '0' then -- Read
+             sdram_data <= unsigned(ddr_dout_reg(7 downto 0));
+          end if;
         end if;
       end if;
     end if;
   end process;
 
-  ddr3_din <= std_logic_vector(c64_data_out) & std_logic_vector(c64_data_out); -- 8 to 16 bit
-  sdram_data <= unsigned(ddr3_dout(7 downto 0));
+  -- Slave Process (clk_ddr domain)
+  process(clk_ddr)
+  begin
+    if rising_edge(clk_ddr) then
+      -- Sync req from Master domain
+      req_sync1 <= req_toggle;
+      req_sync2 <= req_sync1;
+      
+      ddr3_rd <= '0';
+      ddr3_wr <= '0';
+      
+      case cdc_state is
+        when S_IDLE =>
+          if req_sync2 /= req_prev then
+             cdc_state <= S_ISSUE;
+          end if;
+          
+        when S_ISSUE =>
+          if ddr3_busy = '0' then
+             if ddr_cmd_reg = '1' then
+                ddr3_wr <= '1';
+                -- Write: Ack immediately (fire and forget)
+                ack_toggle <= not ack_toggle;
+                req_prev <= req_sync2;
+                cdc_state <= S_IDLE;
+             else
+                ddr3_rd <= '1';
+                cdc_state <= S_WAIT_READ;
+             end if;
+          end if;
+          
+        when S_WAIT_READ =>
+          if ddr3_data_ready = '1' then
+             ddr_dout_reg <= ddr3_dout;
+             ack_toggle <= not ack_toggle;
+             req_prev <= req_sync2;
+             cdc_state <= S_IDLE;
+          end if;
+          
+        when S_WAIT_WRITE =>
+           cdc_state <= S_IDLE;
+      end case;
+    end if;
+  end process;
 
   -- Instantiate the C64 core
   -- UART driver
   uart_tx <= '1';
+  
+  -- Drive unused upper address bits
+  c64_addr(26 downto 16) <= (others => '0');
   
   -- Default values for unused inputs
   ntscMode <= '0'; -- PAL
@@ -443,9 +549,9 @@ begin
     ntscmode => ntscMode,
     vs_in_n => vsync, -- Check polarity
     hs_in_n => hsync, -- Check polarity
-    r_in => r(7 downto 4),
-    g_in => g(7 downto 4),
-    b_in => b(7 downto 4),
+    r_in => r_in_s,
+    g_in => g_in_s,
+    b_in => b_in_s,
     audio_l => audio_data_l,
     audio_r => audio_data_r,
     osd_status => osd_status,
