@@ -43,7 +43,7 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 146,
+    "InstLine" : 283,
     "InstName" : "u_tmds_rpll",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/TMDS_rPLL.v",
     "ModuleLine" : 9,
@@ -51,7 +51,7 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 163,
+    "InstLine" : 300,
     "InstName" : "DVI_TX_Top_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
     "ModuleLine" : 1048,

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Module name="tang_primer_20k_top" Register="25" Lut="53" T_Register="780(25)" T_Alu="132(0)" T_Lut="1314(53)" T_Bsram="3(0)">
+<Module name="tang_primer_20k_top" Register="102" Alu="33" Lut="1024" Ssram="240" T_Register="869(102)" T_Alu="174(33)" T_Lut="2291(1024)" T_Bsram="3(0)" T_Ssram="240(240)">
  <SubModule name="testpattern_inst" Register="38" Lut="61" T_Register="38(38)" T_Lut="61(61)"/>
- <SubModule name="u_vic" Register="38" Alu="15" Lut="51" T_Register="644(38)" T_Alu="64(15)" T_Lut="983(51)" T_Bsram="3(0)">
-  <SubModule name="u_vic" Register="571" Alu="31" Lut="906" Bsram="1" T_Register="571(571)" T_Alu="31(31)" T_Lut="906(906)" T_Bsram="1(1)"/>
-  <SubModule name="u_sd" Register="35" Alu="18" Lut="26" Bsram="2" T_Register="35(35)" T_Alu="18(18)" T_Lut="26(26)" T_Bsram="2(2)"/>
+ <SubModule name="u_vic" Register="38" Alu="15" Lut="47" T_Register="656(38)" T_Alu="73(15)" T_Lut="989(47)" T_Bsram="3(0)">
+  <SubModule name="u_vic" Register="571" Alu="31" Lut="914" Bsram="1" T_Register="571(571)" T_Alu="31(31)" T_Lut="914(914)" T_Bsram="1(1)"/>
+  <SubModule name="u_sd" Register="47" Alu="27" Lut="28" Bsram="2" T_Register="47(47)" T_Alu="27(27)" T_Lut="28(28)" T_Bsram="2(2)"/>
  </SubModule>
  <SubModule name="u_tmds_rpll"/>
  <SubModule name="DVI_TX_Top_inst" Register="73" Alu="68" Lut="217" T_Register="73(73)" T_Alu="68(68)" T_Lut="217(217)"/>
