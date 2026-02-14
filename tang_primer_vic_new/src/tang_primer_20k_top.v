@@ -47,6 +47,15 @@ wire [ 7:0] tp0_data_b/*synthesis syn_keep=1*/;
 reg         vs_r;
 reg  [9:0]  cnt_vs;
 
+// VIC-II integration (safe default off)
+localparam USE_VIC = 1'b1;
+wire        vic_hs;
+wire        vic_vs;
+wire        vic_de;
+wire [7:0]  vic_r;
+wire [7:0]  vic_g;
+wire [7:0]  vic_b;
+
 //------------------------------------
 //HDMI4 TX
 wire serial_clk;
@@ -116,6 +125,22 @@ begin
         cnt_vs<=cnt_vs+1'b1;
 end 
 
+// VIC-II driver (runs off 27MHz system clock to avoid HDMI clock changes)
+vic_ii_driver u_vic (
+    .clk_sys(sys_clk),
+    .rst_n(hdmi4_rst_n),
+    .hs_out(vic_hs),
+    .vs_out(vic_vs),
+    .r_out(vic_r),
+    .g_out(vic_g),
+    .b_out(vic_b),
+    .de_out(vic_de)
+);
+
+wire [7:0] mux_r = USE_VIC ? vic_r : tp0_data_r;
+wire [7:0] mux_g = USE_VIC ? vic_g : tp0_data_g;
+wire [7:0] mux_b = USE_VIC ? vic_b : tp0_data_b;
+
 //==============================================================================
 //TMDS TX(HDMI4)
 TMDS_rPLL u_tmds_rpll
@@ -143,9 +168,9 @@ DVI_TX_Top DVI_TX_Top_inst
     .I_rgb_vs      (tp0_vs_in     ), 
     .I_rgb_hs      (tp0_hs_in     ),    
     .I_rgb_de      (tp0_de_in     ), 
-    .I_rgb_r       (  tp0_data_r ),  //tp0_data_r
-    .I_rgb_g       (  tp0_data_g  ),  
-    .I_rgb_b       (  tp0_data_b  ),  
+    .I_rgb_r       (  mux_r ),  //tp0_data_r or vic
+    .I_rgb_g       (  mux_g  ),  
+    .I_rgb_b       (  mux_b  ),  
     .O_tmds_clk_p  (tmds_clk_p  ),
     .O_tmds_clk_n  (tmds_clk_n  ),
     .O_tmds_data_p (tmds_data_p ),  //{r,g,b}

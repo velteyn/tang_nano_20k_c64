@@ -1,0 +1,41 @@
+General
+Model Name SyncMaster 633NW
+LCD Panel
+Size 15.6 inch (39 cm)
+Display area 344.232 mm(H) x 193.536 mm(V)
+Pixel Pitch 0.252 mm(H) x 0.252 mm(V)
+Synchronization
+Horizontal 30 ~ 61 kHz
+Vertical 56 ~ 75 Hz
+Display Color
+16.7 M
+Resolution
+Optimum resolution 1360 x 768@60 Hz
+Maximum resolution 1360 x 768@60 Hz
+Input Signal, Terminated
+RGB Analog,
+0.7 Vp-p ± 5 %
+Separate H/V sync, Composite, SOG
+TTL level (V high ≥ 2.0 V, V low ≤ 0.8 V)
+Maximum Pixel Clock
+90 MHz (Analog)
+Power Supply
+AC 100 - 240 V~ (+/- 10 %), 50/60 Hz ± 3 Hz
+Signal Cable
+15pin - to - 15pin D-sub cable, Detachable, 1500 +/- 20 mm
+Dimensions (W x H x D) / Weight (Simple Stand)
+386 x 264.5 x 67.2 mm (15.2 x 10.4 x 2.6 inch) (Without Stand)
+386 x 315.8 x 186.6 mm (15.2 x 12.4 x 7.3 inch) (With Stand)/ 2.55 kg (5.62 lbs)
+VESA Mounting Interface
+75 mm x 75 mm (For use with Specialty(Arm) Mounting hardware.)
+Environmental considerations
+Operating
+Temperature : 50°F ~ 104°F (10°C ~ 40°C)
+Humidity : 20 % ~ 80 %, non-condensing
+Storage
+Temperature : -4°F ~ 140°F (-20°C ~ 60°C)
+Humidity : 10 % ~ 80 %, non-condensing
+Plug and Play Capability
+This monitor can be installed on any Plug & Play compatible system. The interaction of the monitor and the
+computer systems will provide the best operating conditions and monitor settings. In most cases, the monitor
+installation will proceed automatically, unless the user wishes to select alternate settings

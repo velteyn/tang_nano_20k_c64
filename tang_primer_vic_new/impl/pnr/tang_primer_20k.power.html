@@ -89,7 +89,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Created Time</td>
-<td>Sat Feb 14 12:59:25 2026
+<td>Sat Feb 14 13:44:03 2026
 </td>
 </tr>
 <tr>
@@ -161,7 +161,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <table class="summary_table">
 <tr>
 <td class="label">Total Power (mW)</td>
-<td>194.023</td>
+<td>206.052</td>
 </tr>
 <tr>
 <td class="label">Quiescent Power (mW)</td>
@@ -169,14 +169,14 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Dynamic Power (mW)</td>
-<td>71.246</td>
+<td>83.275</td>
 </tr>
 </table>
 <h2><a name="Thermal_Info">Thermal Information:</a></h2>
 <table class="summary_table">
 <tr>
 <td class="label">Junction Temperature</td>
-<td>31.213</td>
+<td>31.598</td>
 </tr>
 <tr>
 <td class="label">Theta JA</td>
@@ -184,7 +184,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Max Allowed Ambient Temperature</td>
-<td>78.787</td>
+<td>78.402</td>
 </tr>
 </table>
 <h2><a name="Supply_Summary">Supply Information:</a></h2>
@@ -199,9 +199,9 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <tr>
 <td>VCC</td>
 <td>1.000</td>
-<td>41.084</td>
+<td>53.113</td>
 <td>70.002</td>
-<td>111.086</td>
+<td>123.115</td>
 </tr>
 <tr>
 <td>VCCX</td>
@@ -229,15 +229,21 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td>Logic</td>
-<td>0.789</td>
+<td>1.076</td>
 <td>NA</td>
-<td>8.677</td>
+<td>4.591</td>
 </tr>
 <tr>
 <td>IO</td>
 <td>36.562
 <td>5.012
 <td>22.866
+</tr>
+<tr>
+<td>BSRAM</td>
+<td>11.737
+<td>NA</td>
+<td>NA</td>
 </tr>
 <tr>
 <td>PLL</td>
@@ -255,36 +261,48 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td>tang_primer_20k_top</td>
-<td>39.623</td>
-<td>39.623(39.549)</td>
+<td>51.646</td>
+<td>51.646(51.629)</td>
 <tr>
 <td>tang_primer_20k_top/DVI_TX_Top_inst/</td>
-<td>0.542</td>
-<td>0.542(0.542)</td>
+<td>0.528</td>
+<td>0.528(0.528)</td>
 <tr>
 <td>tang_primer_20k_top/DVI_TX_Top_inst/rgb2dvi_inst/</td>
-<td>0.542</td>
-<td>0.542(0.542)</td>
+<td>0.528</td>
+<td>0.528(0.528)</td>
 <tr>
 <td>tang_primer_20k_top/DVI_TX_Top_inst/rgb2dvi_inst/TMDS8b10b_inst_b/</td>
-<td>0.180</td>
-<td>0.180(0.000)</td>
+<td>0.175</td>
+<td>0.175(0.000)</td>
 <tr>
 <td>tang_primer_20k_top/DVI_TX_Top_inst/rgb2dvi_inst/TMDS8b10b_inst_g/</td>
-<td>0.182</td>
-<td>0.182(0.000)</td>
+<td>0.178</td>
+<td>0.178(0.000)</td>
 <tr>
 <td>tang_primer_20k_top/DVI_TX_Top_inst/rgb2dvi_inst/TMDS8b10b_inst_r/</td>
-<td>0.180</td>
-<td>0.180(0.000)</td>
+<td>0.175</td>
+<td>0.175(0.000)</td>
 <tr>
 <td>tang_primer_20k_top/testpattern_inst/</td>
-<td>0.174</td>
-<td>0.174(0.000)</td>
+<td>0.060</td>
+<td>0.060(0.000)</td>
 <tr>
 <td>tang_primer_20k_top/u_tmds_rpll/</td>
 <td>38.834</td>
 <td>38.834(0.000)</td>
+<tr>
+<td>tang_primer_20k_top/u_vic/</td>
+<td>12.207</td>
+<td>12.207(12.158)</td>
+<tr>
+<td>tang_primer_20k_top/u_vic/u_sd/</td>
+<td>7.743</td>
+<td>7.743(0.000)</td>
+<tr>
+<td>tang_primer_20k_top/u_vic/u_vic_0/</td>
+<td>4.415</td>
+<td>4.415(0.000)</td>
 </table>
 <h2><a name="By_Clock_Domain">Power By Clock Domain:</a></h2>
 <table class="detail_table">
@@ -294,14 +312,14 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <th class="label">Total Dynamic Power(mW)</th>
 </tr>
 <tr>
-<td>u_clkdiv/CLKOUT.default_gen_clk</td>
-<td>74.250</td>
-<td>0.791</td>
-</tr>
-<tr>
 <td>sys_clk</td>
 <td>27.000</td>
-<td>38.854</td>
+<td>51.073</td>
+</tr>
+<tr>
+<td>u_clkdiv/CLKOUT.default_gen_clk</td>
+<td>74.250</td>
+<td>0.601</td>
 </tr>
 <tr>
 <td>NO CLOCK DOMAIN</td>

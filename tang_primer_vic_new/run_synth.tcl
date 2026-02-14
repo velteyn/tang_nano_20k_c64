@@ -8,6 +8,9 @@ add_file src/tang_primer_20k_top.v
 add_file src/testpattern.v
 add_file src/TMDS_rPLL.v
 add_file src/dvi_tx/dvi_tx.v
+add_file src/scandoubler.v
+add_file src/vic_ii_driver.v
+add_file ..\\src\\video_vicII_656x.vhd
 add_file src/tang_primer_20k.cst
 add_file src/tang_primer_20k.sdc
 

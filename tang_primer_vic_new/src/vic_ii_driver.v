@@ -191,7 +191,7 @@ module vic_ii_driver (
         
         .di(vic_di),
         .diColor(4'd1),     // Color RAM Data (White)
-        .do(vic_do),
+        .\do (vic_do),
         
         .vicAddr(vic_addr),
         .irq_n(vic_irq_n),
@@ -215,7 +215,7 @@ module vic_ii_driver (
     reg [7:0] vic_r, vic_g, vic_b;
     always @(*) begin
         case (vic_color_idx)
-             4'd0:  begin vic_r = 8'h00; vic_g = 8'h00; vic_b = 8'h00; end // Black
+             4'd0:  begin vic_r = 8'h00; vic_g = 8'h88; vic_b = 8'hFF; end
              4'd1:  begin vic_r = 8'hFF; vic_g = 8'hFF; vic_b = 8'hFF; end // White
              4'd6:  begin vic_r = 8'h00; vic_g = 8'h00; vic_b = 8'hAA; end // Blue
              4'd14: begin vic_r = 8'h00; vic_g = 8'h88; vic_b = 8'hFF; end // Light Blue

@@ -4,8 +4,19 @@ Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\
 Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v'
 Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\testpattern.v'
 Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v'
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd'
+Analyzing entity 'video_vicii_656x'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd":22)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd":78)
 Compiling module 'tang_primer_20k_top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":24)
 Compiling module 'testpattern'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\testpattern.v":17)
+Compiling module 'vic_ii_driver'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v":1)
+Switching to VHDL mode to elaborate design unit 'video_vicii_656x'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v":207)
+Processing 'video_vicii_656x(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd":22)
+Returning to Verilog mode to proceed with elaboration("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v":207)
+Compiling module 'scandoubler(HCNT_WIDTH=10)'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v":21)
+Extracting RAM for identifier 'sd_buffer'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v":142)
 Compiling module 'TMDS_rPLL'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v":9)
 Compiling module 'DVI_TX_Top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v":1048)
 Compiling module '**'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v":1047)

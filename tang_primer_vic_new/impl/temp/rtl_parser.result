@@ -9,7 +9,7 @@
   "SubInsts" : [
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 80,
+    "InstLine" : 89,
     "InstName" : "testpattern_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/testpattern.v",
     "ModuleLine" : 17,
@@ -17,7 +17,33 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 121,
+    "InstLine" : 129,
+    "InstName" : "u_vic",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "vic_ii_driver",
+    "SubInsts" : [
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+      "InstLine" : 155,
+      "InstName" : "u_vic",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/video_vicII_656x.vhd",
+      "ModuleLine" : 22,
+      "ModuleName" : "video_vicii_656x"
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+      "InstLine" : 235,
+      "InstName" : "u_sd",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/scandoubler.v",
+      "ModuleLine" : 21,
+      "ModuleName" : "scandoubler"
+     }
+    ]
+   },
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 146,
     "InstName" : "u_tmds_rpll",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/TMDS_rPLL.v",
     "ModuleLine" : 9,
@@ -25,7 +51,7 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 138,
+    "InstLine" : 163,
     "InstName" : "DVI_TX_Top_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
     "ModuleLine" : 1048,

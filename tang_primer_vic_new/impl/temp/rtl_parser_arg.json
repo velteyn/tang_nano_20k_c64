@@ -16,6 +16,19 @@
   {
    "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
    "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/scandoubler.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+   "Type" : "verilog"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/video_vicII_656x.vhd",
+   "Type" : "vhdl"
   }
  ],
  "IncludePath" : [
