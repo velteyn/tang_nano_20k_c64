@@ -1,0 +1,18 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW2A-18C" pn="GW2A-LV18PG256C8/I7">gw2a18c-011</Device>
+    <FileList>
+        <File path="src/tang_primer_20k_top.v" type="file.verilog" enable="1"/>
+        <File path="src/clock_gen.v" type="file.verilog" enable="1"/>
+        <File path="src/test_pattern_gen.v" type="file.verilog" enable="1"/>
+        <File path="src/dvi_tx/dvi_tx.v" type="file.verilog" enable="1"/>
+        <File path="src/tang_primer_20k.cst" type="file.cst" enable="1"/>
+        <File path="src/tang_primer_20k.sdc" type="file.sdc" enable="1"/>
+    </FileList>
+    <OptionList>
+        <Option type="global" attribute="use_sspi_as_gpio" value="1"/>
+    </OptionList>
+</Project>

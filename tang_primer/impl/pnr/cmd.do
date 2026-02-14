@@ -1,0 +1,18 @@
+-d C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\impl\gwsynthesis\tang_primer_20k.vg
+-p GW2A-18C-PBGA256-8
+-pn GW2A-LV18PG256C8/I7
+-cst C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\tang_primer_20k.cst
+-cfg C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\impl\pnr\device.cfg
+-sdc C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\tang_primer_20k.sdc
+-bit
+-tr
+-ph
+-timing
+-cst_error
+-convert_sdp32_36_to_sdp16_18
+-place_option 0
+-route_option 0
+-clock_route_order 0
+-correct_hold 1
+-route_maxfan 23
+-global_freq 100.000

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="tang_primer_20k_top" Register="16" Alu="15" Lut="3" T_Register="115(16)" T_Alu="83(15)" T_Lut="273(3)">
+ <SubModule name="u_clock_gen"/>
+ <SubModule name="u_tpg" Register="26" Lut="53" T_Register="26(26)" T_Lut="53(53)"/>
+ <SubModule name="u_dvi_tx" Register="73" Alu="68" Lut="217" T_Register="73(73)" T_Alu="68(68)" T_Lut="217(217)"/>
+</Module>

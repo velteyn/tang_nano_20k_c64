@@ -49,9 +49,9 @@ parameter HCNT_WIDTH = 9;
 // pixel clock divider
 reg [1:0] i_div;
 reg ce_x1, ce_x2;
+reg last_hs_in;
 
 always @(posedge clk_sys) begin
-	reg last_hs_in;
 	last_hs_in <= hs_in;
 	if(last_hs_in & !hs_in) begin
 		i_div <= 2'b00;
@@ -139,7 +139,7 @@ wire [11:0] sd_out = bypass ? sd_bypass_out : sd_buffer_out;
 // ==================================================================
 
 // 2 lines of 2**HCNT_WIDTH pixels 3*4 bit RGB
-(* ramstyle = "no_rw_check" *) reg [11:0] sd_buffer[2*2**HCNT_WIDTH];
+(* ramstyle = "no_rw_check" *) reg [11:0] sd_buffer[0:(2*(2**HCNT_WIDTH))-1];
 
 // use alternating sd_buffers when storing/reading data   
 reg        line_toggle;
@@ -149,14 +149,14 @@ reg  [HCNT_WIDTH-1:0] hs_max;
 reg  [HCNT_WIDTH-1:0] hs_rise;
 reg  [HCNT_WIDTH-1:0] hcnt;
 
-always @(posedge clk_sys) begin
-	reg hsD, vsD;
+reg hsD_in, vsD_in;
 
+always @(posedge clk_sys) begin
 	if(ce_x1) begin
-		hsD <= hs_in;
+		hsD_in <= hs_in;
 
 		// falling edge of hsync indicates start of line
-		if(hsD && !hs_in) begin
+		if(hsD_in && !hs_in) begin
 			hs_max <= hcnt;
 			hcnt <= 0;
 		end else begin
@@ -164,13 +164,13 @@ always @(posedge clk_sys) begin
 		end
 
 		// save position of rising edge
-		if(!hsD && hs_in) hs_rise <= hcnt;
+		if(!hsD_in && hs_in) hs_rise <= hcnt;
 
-		vsD <= vs_in;
-		if(vsD != vs_in) line_toggle <= 0;
+		vsD_in <= vs_in;
+		if(vsD_in != vs_in) line_toggle <= 0;
 
 		// begin of incoming hsync
-		if(hsD && !hs_in) line_toggle <= !line_toggle;
+		if(hsD_in && !hs_in) line_toggle <= !line_toggle;
 
 		sd_buffer[{line_toggle, hcnt}] <= {r_in, g_in, b_in};
 	end
@@ -184,16 +184,16 @@ reg [4*3-1:0] sd_buffer_out, sd_bypass_out;
 reg [HCNT_WIDTH-1:0] sd_hcnt;
 reg        hs_sd, vs_sd;
 
+reg hsD_out;
+
 // timing generation runs 32 MHz (twice the input signal analysis speed)
 always @(posedge clk_sys) begin
-	reg hsD;
-
 	if(ce_x2) begin
-		hsD <= hs_in;
+		hsD_out <= hs_in;
 
 		// output counter synchronous to input and at twice the rate
 		sd_hcnt <= sd_hcnt + 1'd1;
-		if(hsD && !hs_in)     sd_hcnt <= hs_max;
+		if(hsD_out && !hs_in)     sd_hcnt <= hs_max;
 		if(sd_hcnt == hs_max) sd_hcnt <= 0;
 
 		// replicate horizontal sync at twice the speed

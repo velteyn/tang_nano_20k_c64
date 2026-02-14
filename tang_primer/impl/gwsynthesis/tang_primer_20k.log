@@ -1,0 +1,32 @@
+GowinSynthesis start
+Running parser ...
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\tang_primer_20k_top.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\clock_gen.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\test_pattern_gen.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\dvi_tx\dvi_tx.v'
+Compiling module 'tang_primer_20k_top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\tang_primer_20k_top.v":1)
+WARN  (EX3791) : Expression size 17 truncated to fit in target size 16("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\tang_primer_20k_top.v":22)
+Compiling module 'clock_gen'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\clock_gen.v":1)
+Compiling module 'test_pattern_gen'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\test_pattern_gen.v":1)
+Compiling module 'DVI_TX_Top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\dvi_tx\dvi_tx.v":1048)
+Compiling module '**'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\src\dvi_tx\dvi_tx.v":1047)
+NOTE  (EX0101) : Current top module is "tang_primer_20k_top"
+[5%] Running netlist conversion ...
+Running device independent optimization ...
+[10%] Optimizing Phase 0 completed
+[15%] Optimizing Phase 1 completed
+[25%] Optimizing Phase 2 completed
+Running inference ...
+[30%] Inferring Phase 0 completed
+[40%] Inferring Phase 1 completed
+[50%] Inferring Phase 2 completed
+[55%] Inferring Phase 3 completed
+Running technical mapping ...
+[60%] Tech-Mapping Phase 0 completed
+[65%] Tech-Mapping Phase 1 completed
+[75%] Tech-Mapping Phase 2 completed
+[80%] Tech-Mapping Phase 3 completed
+[90%] Tech-Mapping Phase 4 completed
+[95%] Generate netlist file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\impl\gwsynthesis\tang_primer_20k.vg" completed
+[100%] Generate report file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\impl\gwsynthesis\tang_primer_20k_syn.rpt.html" completed
+GowinSynthesis finish

@@ -1,0 +1,46 @@
+[
+ {
+  "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+  "InstLine" : 24,
+  "InstName" : "tang_primer_20k_top",
+  "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+  "ModuleLine" : 24,
+  "ModuleName" : "tang_primer_20k_top",
+  "SubInsts" : [
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 80,
+    "InstName" : "testpattern_inst",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/testpattern.v",
+    "ModuleLine" : 17,
+    "ModuleName" : "testpattern"
+   },
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 121,
+    "InstName" : "u_tmds_rpll",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/TMDS_rPLL.v",
+    "ModuleLine" : 9,
+    "ModuleName" : "TMDS_rPLL"
+   },
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 138,
+    "InstName" : "DVI_TX_Top_inst",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
+    "ModuleLine" : 1048,
+    "ModuleName" : "DVI_TX_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
+      "InstLine" : 1079,
+      "InstName" : "rgb2dvi_inst",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~rgb2dvi.DVI_TX_Top"
+     }
+    ]
+   }
+  ]
+ }
+]

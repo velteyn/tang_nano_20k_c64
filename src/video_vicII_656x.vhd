@@ -21,7 +21,7 @@ use IEEE.numeric_std.ALL;
 
 entity video_vicii_656x is
 	generic (
-		registeredAddress : boolean;
+		registeredAddress : boolean := false;
 		emulateRefresh : boolean := false;
 		emulateLightpen : boolean := false;
 		emulateGraphics : boolean := true
