@@ -90,8 +90,8 @@ module vic_ii_driver (
                     cs <= 1; we <= 1; reg_addr <= 6'h20; reg_data <= 8'd14;
                     state <= 2;
                 end
-                2: begin // Write BG Color ($D021) -> Blue (6)
-                    cs <= 1; we <= 1; reg_addr <= 6'h21; reg_data <= 8'd6;
+                2: begin // Write BG Color ($D021) -> Light Blue (14)
+                    cs <= 1; we <= 1; reg_addr <= 6'h21; reg_data <= 8'd14;
                     state <= 3;
                 end
                 3: begin // Enable Sprite 0 ($D015) -> 1
