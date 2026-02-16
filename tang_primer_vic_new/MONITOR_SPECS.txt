@@ -1,41 +1,77 @@
 General
-Model Name SyncMaster 633NW
+Model Name SyncMaster 2033SW
 LCD Panel
-Size 15.6 inch (39 cm)
-Display area 344.232 mm(H) x 193.536 mm(V)
-Pixel Pitch 0.252 mm(H) x 0.252 mm(V)
+Size 20 inch (50 cm)
+Display area 442.8 mm (H) x 249.075 mm (V)
+Pixel Pitch 0.2768 mm (H) x 0.2768 mm (V)
 Synchronization
-Horizontal 30 ~ 61 kHz
+Horizontal 30 ~ 81 kHz
 Vertical 56 ~ 75 Hz
 Display Color
-16.7 M
+16.7M
 Resolution
-Optimum resolution 1360 x 768@60 Hz
-Maximum resolution 1360 x 768@60 Hz
+Optimum resolution 1600 x 900@60 Hz
+Maximum resolution 1600 x 900@60 Hz
 Input Signal, Terminated
-RGB Analog,
+RGB Analog, DVI(Digital Visual Interface) Compliant Digital RGB
 0.7 Vp-p ± 5 %
 Separate H/V sync, Composite, SOG
 TTL level (V high ≥ 2.0 V, V low ≤ 0.8 V)
 Maximum Pixel Clock
-90 MHz (Analog)
+150 MHz (Analog, Digital)
 Power Supply
 AC 100 - 240 V~ (+/- 10 %), 50/60 Hz ± 3 Hz
 Signal Cable
-15pin - to - 15pin D-sub cable, Detachable, 1500 +/- 20 mm
+15pin - to - 15pin D-sub cable, Detachable, 1.5m
+DVI-D to DVI-D connector, Detachable, 1.5m
 Dimensions (W x H x D) / Weight (Simple Stand)
-386 x 264.5 x 67.2 mm (15.2 x 10.4 x 2.6 inch) (Without Stand)
-386 x 315.8 x 186.6 mm (15.2 x 12.4 x 7.3 inch) (With Stand)/ 2.55 kg (5.62 lbs)
+485.8 x 325.9 x 72.6 mm (19.1 x 12.8 x 2.9 inch) (Without Stand)
+485.8 x 373.5 x 200 mm (19.1 x 14.7 x 7.9 inch) (With Stand) / 4.45 kg(9.8 lbs)
 VESA Mounting Interface
-75 mm x 75 mm (For use with Specialty(Arm) Mounting hardware.)
+100 mm x 100 mm (For use with Specialty(Arm) Mounting hardware.)
 Environmental considerations
 Operating
 Temperature : 50°F ~ 104°F (10°C ~ 40°C)
-Humidity : 20 % ~ 80 %, non-condensing
-Storage
-Temperature : -4°F ~ 140°F (-20°C ~ 60°C)
 Humidity : 10 % ~ 80 %, non-condensing
-Plug and Play Capability
-This monitor can be installed on any Plug & Play compatible system. The interaction of the monitor and the
-computer systems will provide the best operating conditions and monitor settings. In most cases, the monitor
-installation will proceed automatically, unless the user wishes to select alternate settings
+Note
+Design and specifications are subject to change without prior notice.
+Class B Equipment (Information Communication equipment for residential use)
+This product complies with the Electromagnetic Compatibility Directives for residential use and can be used in all areas
+including common residential areas. (Class B equipment emits less electromagnetic waves than Class A equipment.)
+Storage
+Temperature : -4°F ~ 113°F (-20°C ~ 45°C)
+Humidity : 5 % ~ 95 %, non-condensing
+
+If the signal transferred from the computer is the same as the following Preset Timing Modes, the screen will be adjusted
+automatically. However, if the signal differs, the screen may go blank while the power LED is on. Refer to the video card manual
+and adjusts the screen as follows.
+Display Mode
+Horizontal
+Frequency
+(kHz)
+Vertical
+Frequency (Hz)
+Pixel Clock
+(MHz)
+Sync Polarity
+(H/V)
+IBM, 720 x 400 31.469 70.087 28.322 -/+
+MAC, 640 x 480 35.000 66.667 30.240 -/-
+MAC, 832 x 624 49.726 74.551 57.284 -/-
+MAC, 1152 x 870 68.681 75.062 100.000 -/-
+VESA, 640 x 480 31.469 59.940 25.175 -/-
+VESA, 640 x 480 37.861 72.809 31.500 -/-
+VESA, 640 x 480 37.500 75.000 31.500 -/-
+VESA, 800 x 600 35.156 56.250 36.000 +/+
+VESA, 800 x 600 37.879 60.317 40.000 +/+
+VESA, 800 x 600 48.077 72.188 50.000 +/+
+VESA, 800 x 600 46.875 75.000 49.500 +/+
+VESA, 1024 x 768 48.363 60.004 65.000 -/-
+VESA, 1024 x 768 56.476 70.069 75.000 -/-
+VESA, 1024 x 768 60.023 75.029 78.750 +/+
+VESA, 1152 x 864 67.500 75.000 108.000 +/+
+VESA, 1280 x 800 49.702 59.810 83.50 -/+
+VESA, 1280 x 800 62.795 74.934 106.500 -/+
+VESA, 1440 x 900 55.935 59.887 106.500 -/+
+VESA, 1440 x 900 70.635 74.984 136.750 -/+
+VESA, 1600 x 900 60.000 60.000 108.000 +/+
