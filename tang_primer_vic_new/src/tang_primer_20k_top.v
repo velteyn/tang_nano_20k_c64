@@ -137,34 +137,27 @@ vic_ii_driver u_vic (
     .de_out(vic_de)
 );
 
-// -----------------------------------------------------------------------------
-// Simple scaler: VIC 640x480 -> 1280x720 with 2x horizontal and approx 3:2 vertical
-// - Write domain (sys_clk): sample one source line into ping-pong line buffers (640 samples)
-//   using a Bresenham-like resampler based on measured line length
-// - Read domain (pix_clk): read active buffer at 2x horizontally; hold line until next commit
-//   Vertical effectively expands ~1.5x because HDMI runs faster (720 lines vs 480)
-// -----------------------------------------------------------------------------
 localparam SRC_W = 640;
 
 reg        vic_hs_d;
 always @(posedge sys_clk) vic_hs_d <= vic_hs;
 wire       vic_hs_fall = vic_hs_d & ~vic_hs;
 
-reg [11:0] line_len_cnt = 12'd0;
-reg [11:0] line_len_latched = 12'd800; // sane default
-reg        line_len_locked = 1'b0;
+reg [11:0] line_len_cnt     = 12'd0;
+reg [11:0] line_len_latched = 12'd860;
+reg        line_len_locked  = 1'b0;
 always @(posedge sys_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
         line_len_cnt     <= 12'd0;
-        line_len_latched <= 12'd800;
+        line_len_latched <= 12'd860;
         line_len_locked  <= 1'b0;
     end else begin
         if(vic_hs_fall) begin
-            if(!line_len_locked) begin
-                line_len_latched <= (line_len_cnt > 12'd100) ? line_len_cnt : 12'd800;
+            if(!line_len_locked && (line_len_cnt > 12'd200) && (line_len_cnt < 12'd2400)) begin
+                line_len_latched <= line_len_cnt;
                 line_len_locked  <= 1'b1;
             end
-            line_len_cnt     <= 12'd0;
+            line_len_cnt <= 12'd0;
         end else begin
             line_len_cnt <= line_len_cnt + 12'd1;
         end
@@ -172,11 +165,12 @@ always @(posedge sys_clk or negedge hdmi4_rst_n) begin
 end
 
 reg        wr_bank = 1'b0;
-reg [9:0]  wr_ptr  = 10'd0; // 0..639
-reg [21:0] acc     = 22'd0; // accumulator for resampling
+reg [9:0]  wr_ptr  = 10'd0;
+reg [21:0] acc     = 22'd0;
 reg [23:0] linebuf0 [0:SRC_W-1];
 reg [23:0] linebuf1 [0:SRC_W-1];
 reg        commit_tgl = 1'b0;
+reg        commit_bank = 1'b0;
 
 always @(posedge sys_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
@@ -189,9 +183,9 @@ always @(posedge sys_clk or negedge hdmi4_rst_n) begin
             wr_bank    <= ~wr_bank;
             wr_ptr     <= 10'd0;
             acc        <= 22'd0;
-            commit_tgl <= ~commit_tgl; // signal new line available
+            commit_tgl <= ~commit_tgl;
+            commit_bank<= wr_bank;
         end else begin
-            // Bresenham-like: place SRC_W samples evenly across measured line_len_latched cycles
             if(wr_ptr < SRC_W) begin
                 acc <= acc + SRC_W;
                 if(acc >= line_len_latched) begin
@@ -205,39 +199,53 @@ always @(posedge sys_clk or negedge hdmi4_rst_n) begin
     end
 end
 
-// Cross domain toggle to pix clock
 reg commit_sync0, commit_sync1, commit_sync2;
+reg commit_bank_s0, commit_bank_s1, commit_bank_s2;
 always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
         commit_sync0 <= 1'b0;
         commit_sync1 <= 1'b0;
         commit_sync2 <= 1'b0;
+        commit_bank_s0 <= 1'b0;
+        commit_bank_s1 <= 1'b0;
+        commit_bank_s2 <= 1'b0;
     end else begin
         commit_sync0 <= commit_tgl;
         commit_sync1 <= commit_sync0;
         commit_sync2 <= commit_sync1;
+        commit_bank_s0 <= commit_bank;
+        commit_bank_s1 <= commit_bank_s0;
+        commit_bank_s2 <= commit_bank_s1;
     end
 end
 wire new_line_available = commit_sync1 ^ commit_sync2;
+wire bank_of_commit     = commit_bank_s1;
 
 reg rd_bank = 1'b0;
 reg pending_line = 1'b0;
-wire de_rising = tp0_de_in & ~de_d;
-reg  rep_toggle = 1'b0;     // 0 -> repeat 2 lines, 1 -> repeat 1 line
-reg  rep_count  = 1'b0;     // remaining repeats for current source line
+wire de_rising;
+reg        de_d;
+assign de_rising = tp0_de_in & ~de_d;
+reg  rep_toggle = 1'b0;
+reg  rep_count  = 1'b0;
+reg  next_rd_bank = 1'b0;
 always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
         rd_bank <= 1'b0;
         pending_line <= 1'b0;
         rep_toggle <= 1'b0;
         rep_count  <= 1'b0;
+        next_rd_bank <= 1'b0;
     end else begin
-        if(new_line_available) pending_line <= 1'b1;
+        if(new_line_available) begin
+            pending_line <= 1'b1;
+            next_rd_bank <= bank_of_commit;
+        end
         if(de_rising) begin
             if(rep_count != 1'b0) begin
                 rep_count <= 1'b0;
             end else if(pending_line) begin
-                rd_bank <= ~rd_bank;
+                rd_bank <= next_rd_bank;
                 pending_line <= 1'b0;
                 rep_toggle <= ~rep_toggle;
                 rep_count  <= rep_toggle ? 1'b0 : 1'b1;
@@ -246,8 +254,6 @@ always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     end
 end
 
-// HDMI active window horizontal counter
-reg        de_d;
 reg [10:0] x_cnt;
 always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
@@ -264,11 +270,31 @@ always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     end
 end
 
-wire [9:0] src_x = x_cnt[10:1]; // divide by 2
-wire [23:0] vic_pix_read = (!rd_bank) ? linebuf0[src_x] : linebuf1[src_x];
-wire [7:0] vic_r_720 = vic_pix_read[23:16];
-wire [7:0] vic_g_720 = vic_pix_read[15:8];
-wire [7:0] vic_b_720 = vic_pix_read[7:0];
+reg [9:0]  src_x_rd;
+reg [23:0] vic_pix_read;
+reg [7:0]  vic_r_720, vic_g_720, vic_b_720;
+always @(posedge pix_clk or negedge hdmi4_rst_n) begin
+    if(!hdmi4_rst_n) begin
+        src_x_rd <= 10'd0;
+        vic_pix_read <= 24'd0;
+        vic_r_720 <= 8'd0;
+        vic_g_720 <= 8'd0;
+        vic_b_720 <= 8'd0;
+    end else begin
+        if(tp0_de_in && !de_d) src_x_rd <= 10'd0;
+        if(tp0_de_in) begin
+            src_x_rd <= (x_cnt[10:1] > 10'd639) ? 10'd639 : x_cnt[10:1];
+            vic_pix_read <= (!rd_bank) ? linebuf0[src_x_rd] : linebuf1[src_x_rd];
+            vic_r_720 <= vic_pix_read[23:16];
+            vic_g_720 <= vic_pix_read[15:8];
+            vic_b_720 <= vic_pix_read[7:0];
+        end else begin
+            vic_r_720 <= 8'd0;
+            vic_g_720 <= 8'd0;
+            vic_b_720 <= 8'd0;
+        end
+    end
+end
 
 wire [7:0] src_r = USE_VIC ? vic_r_720 : tp0_data_r;
 wire [7:0] src_g = USE_VIC ? vic_g_720 : tp0_data_g;
@@ -299,18 +325,18 @@ defparam u_clkdiv.GSREN="false";
 
 DVI_TX_Top DVI_TX_Top_inst
 (
-    .I_rst_n       (hdmi4_rst_n   ),  //asynchronous reset, low active
+    .I_rst_n       (hdmi4_rst_n   ),
     .I_serial_clk  (serial_clk    ),
-    .I_rgb_clk     (pix_clk       ),  //pixel clock
+    .I_rgb_clk     (pix_clk       ),
     .I_rgb_vs      (tp0_vs_in     ), 
     .I_rgb_hs      (tp0_hs_in     ),    
     .I_rgb_de      (tp0_de_in     ), 
-    .I_rgb_r       (  mux_r ),  //tp0_data_r or vic
+    .I_rgb_r       (  mux_r ),
     .I_rgb_g       (  mux_g  ),  
     .I_rgb_b       (  mux_b  ),  
     .O_tmds_clk_p  (tmds_clk_p  ),
     .O_tmds_clk_n  (tmds_clk_n  ),
-    .O_tmds_data_p (tmds_data_p ),  //{r,g,b}
+    .O_tmds_data_p (tmds_data_p ),
     .O_tmds_data_n (tmds_data_n )
 );
 

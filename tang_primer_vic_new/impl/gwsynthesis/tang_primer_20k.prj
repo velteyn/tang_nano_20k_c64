@@ -4,11 +4,11 @@
     <Version>beta</Version>
     <Device id="GW2A-18C" package="PBGA256" speed="8" partNumber="GW2A-LV18PG256C8/I7"/>
     <FileList>
-        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v" type="verilog"/>
         <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v" type="verilog"/>
-        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\testpattern.v" type="verilog"/>
         <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v" type="verilog"/>
         <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\testpattern.v" type="verilog"/>
         <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v" type="verilog"/>
         <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd" type="vhdl"/>
     </FileList>

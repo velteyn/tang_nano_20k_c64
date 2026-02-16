@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gowin-synthesis-project>
+<Project>
+    <Version>beta</Version>
+    <Device id="GW2A-18C" package="PBGA256" speed="8" partNumber="GW2A-LV18PG256C8/I7"/>
+    <FileList>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\tp_admi_top.v" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\TMDS_rPLL.v" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\hdmi_800x600.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\dvi_640x480.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\dvi_800x600.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\dvi_1360x768.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\serializer.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\tmds_channel.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\packet_assembler.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\packet_picker.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\audio_clock_regeneration_packet.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\audio_info_frame.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\audio_sample_packet.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\auxiliary_video_information_info_frame.sv" type="verilog"/>
+        <File path="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\src\source_product_description_info_frame.sv" type="verilog"/>
+    </FileList>
+    <OptionList>
+        <Option type="disable_insert_pad" value="0"/>
+        <Option type="global_freq" value="100.000"/>
+        <Option type="looplimit" value="2000"/>
+        <Option type="output_file" value="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_to_admi\impl\gwsynthesis\project.vg"/>
+        <Option type="print_all_synthesis_warning" value="0"/>
+        <Option type="ram_rw_check" value="0"/>
+        <Option type="top_module" value="tp_admi_top"/>
+        <Option type="vcc" value="1.0"/>
+        <Option type="verilog_language" value="sysv-2017"/>
+        <Option type="vhdl_language" value="vhdl-1993"/>
+    </OptionList>
+</Project>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Module name="tang_primer_20k_top" Register="102" Alu="33" Lut="1024" Ssram="240" T_Register="869(102)" T_Alu="174(33)" T_Lut="2291(1024)" T_Bsram="3(0)" T_Ssram="240(240)">
- <SubModule name="testpattern_inst" Register="38" Lut="61" T_Register="38(38)" T_Lut="61(61)"/>
- <SubModule name="u_vic" Register="38" Alu="15" Lut="47" T_Register="656(38)" T_Alu="73(15)" T_Lut="989(47)" T_Bsram="3(0)">
-  <SubModule name="u_vic" Register="571" Alu="31" Lut="914" Bsram="1" T_Register="571(571)" T_Alu="31(31)" T_Lut="914(914)" T_Bsram="1(1)"/>
+<Module name="tang_primer_20k_top" Register="168" Alu="33" Lut="230" Bsram="4" T_Register="935(168)" T_Alu="174(33)" T_Lut="1472(230)" T_Bsram="7(4)">
+ <SubModule name="testpattern_inst" Register="38" Lut="59" T_Register="38(38)" T_Lut="59(59)"/>
+ <SubModule name="u_vic" Register="38" Alu="15" Lut="44" T_Register="656(38)" T_Alu="73(15)" T_Lut="966(44)" T_Bsram="3(0)">
+  <SubModule name="u_vic" Register="571" Alu="31" Lut="894" Bsram="1" T_Register="571(571)" T_Alu="31(31)" T_Lut="894(894)" T_Bsram="1(1)"/>
   <SubModule name="u_sd" Register="47" Alu="27" Lut="28" Bsram="2" T_Register="47(47)" T_Alu="27(27)" T_Lut="28(28)" T_Bsram="2(2)"/>
  </SubModule>
  <SubModule name="u_tmds_rpll"/>

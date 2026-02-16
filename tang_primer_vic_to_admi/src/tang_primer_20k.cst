@@ -1,0 +1,27 @@
+// Tang Primer 20K HDMI pins (TLVDS_OBUF)
+// Use TLVDS with PULL_MODE=NONE and DRIVE=3.5 (per official example)
+
+// Clock input 27MHz
+IO_LOC "sys_clk" H11;
+IO_PORT "sys_clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+// Reset input (SSPI pin; ensure 'use_sspi_as_gpio' is enabled)
+IO_LOC "reset_n" T10;
+IO_PORT "reset_n" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+// HDMI / TMDS using pair notation on positive port name
+// Data 2 (Red)
+IO_LOC "tmds_data_p[2]" K14,K15;
+IO_PORT "tmds_data_p[2]" PULL_MODE=NONE;
+
+// Data 1 (Green)
+IO_LOC "tmds_data_p[1]" J15,K16;
+IO_PORT "tmds_data_p[1]" PULL_MODE=NONE;
+
+// Data 0 (Blue)
+IO_LOC "tmds_data_p[0]" H14,H16;
+IO_PORT "tmds_data_p[0]" PULL_MODE=NONE;
+
+// Clock
+IO_LOC "tmds_clk_p" G16,H15;
+IO_PORT "tmds_clk_p" PULL_MODE=NONE;

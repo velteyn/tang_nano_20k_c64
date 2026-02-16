@@ -1,0 +1,106 @@
+VIC-II to HDMI Pipeline: Fellow Projects vs tang_primer_vic_new
+
+1) Purpose
+- Summarize how fellow C64 projects (e.g., Tang Nano/Console/Mega) convert VIC-II style video to HDMI.
+- Compare those patterns with the current tang_primer_vic_new approach.
+- Cross-check conclusions with tang_primer_vic_new\VIC_II_IMPLEMENTATION_DOC.md for coherence.
+
+2) Fellow Projects: Common Pipeline
+- Core idea (shared modules):
+  - VIC-II core produces 15 kHz video timing (hsync/vsync + color).
+  - Scandoubler doubles line-rate to ~31 kHz (VGA-compatible).
+  - Optional OSD overlays.
+  - HDMI encoder converts RGB + syncs into TMDS 10-bit channels.
+  - Serializer shifts 10-bit TMDS using a 5× pixel clock.
+  - TLVDS output buffers drive the HDMI differential pairs.
+- Canonical implementation:
+  - Wrapper: src\misc\video.v
+  - HDMI: src\hdmi\hdmi.sv (timing tables for NTSC/PAL/MONO)
+  - Serializer: src\hdmi\serializer.sv (OSER10 on Gowin)
+  - TMDS channel: src\hdmi\tmds_channel.sv
+  - Packetization: src\hdmi\packet_*.sv
+  - Analyzer/reset: src\misc\video_analyzer.v
+- Evidence in build scripts:
+  - build_tm60k.tcl includes video.v + hdmi.sv + serializer.sv + tmds_channel.sv + packet_* + osd_u8g2.v
+  - build_tc60k.tcl includes similar set (or a board-specific video*.v variant for LCD/other outputs).
+- Signal polarity and usage:
+  - video.v expects active-low sync inputs (hs_in_n, vs_in_n).
+  - Scandoubler inputs are 4-bit per color; outputs are 6-bit per color for darkened scanlines.
+- Clocking:
+  - Two clocks provided at the top level:
+    - clk_pixel (≈ 31.5–32 MHz), clk_pixel_x5 (≈ 157.5–160 MHz)
+  - Ratio fixed at exactly 5× for TMDS 10:1 DDR serialization.
+- Constraints:
+  - TLVDS_OBUF used to drive differential pins for HDMI data and clock.
+  - For boards like Tang Nano 20K (GW2AR-18C) constraints avoid IO_TYPE/BANK_VCCIO with TLVDS and don’t set DRIVE (per project notes); for Tang Primer 20K (GW2A-18C) DRIVE=3.5, PULL_MODE=NONE is used in example constraints.
+
+3) How Tang Nano/Console/Mega Achieve a VIC-II Image
+- They do NOT depend on the board vendor’s “DVI TX IP”. Instead they:
+  - Run the open-source hdmi.sv, a well-tested TMDS encoder that accepts standard video timing.
+  - Lock the HDMI timing to the source using video_analyzer.v (vreset) so counters align to the visible region.
+  - Use the scandoubler to produce a stable 31 kHz horizontal rate from the VIC-II’s 15 kHz.
+  - Present scan-doubled RGB+sync to hdmi.sv which then emits 10-bit TMDS symbols per channel.
+  - Serialize with OSER10 at 5× pixel clock and buffer out via TLVDS_OBUF to the HDMI connector.
+- Practical clock points seen in docs and scripts:
+  - Pixel clock close to 31.5 MHz (or 32 MHz, both used in practice), with 5× fast clock.
+  - This keeps monitors locked and maintains deterministic timing.
+
+4) Current tang_primer_vic_new Approach
+- HDMI Output:
+  - Uses Gowin DVI_TX_Top (vendor IP) in top-level (src\tang_primer_vic_new\src\dvi_tx\dvi_tx.v via tang_primer_20k_top.v).
+  - Testpattern is configured for 1280×720 timing; the scaler resamples VIC-II output to match this mode.
+- VIC-II Driver:
+  - video_vicii_656x VHDL core is wrapped by vic_ii_driver.v (writes a few registers, provides simple mock data for sprite).
+  - A scandoubler is present and enabled to generate 31 kHz-equivalent syncs.
+- Resampling/Scaler in Top:
+  - Line-based resampling and 2× horizontal expansion to match the 1280×720 HDMI mode, then forwarded to DVI_TX_Top.
+
+5) Alignment vs Fellow Projects
+- Common ground:
+  - Both paths use a scandoubler to double VIC-II’s 15 kHz lines to ~31 kHz.
+  - Both end up in HDMI TMDS differential signaling.
+- Key differences:
+  - Fellow projects use the shared, open-source hdmi.sv and strict 5× clocking; tang_primer_vic_new uses Gowin’s DVI_TX_Top with a board example timing (1280×720).
+  - Fellow projects feed the scan-doubled 6-bit data straight into the HDMI encoder; tang_primer_vic_new performs an additional resampler to fit 1280×720.
+  - Fellow projects reset/synchronize HDMI timing to the source using video_analyzer.v; tang_primer_vic_new relies on fixed DVI TX timing.
+- Practical implication:
+  - The fellow approach tends to be more tolerant and source-synchronized (reduced drift), while tang_primer_vic_new’s fixed-mode DVI IP requires the scaler to be very stable and accurate.
+
+6) Coherence with VIC_II_IMPLEMENTATION_DOC.md
+- The document states:
+  - HDMI clock “25.2 MHz (VGA Standard)” and “pixel-doubled horizontally and scanline-doubled vertically.”
+  - In our current top, the DVI TX is configured for 1280×720 with a different pixel clock, not 25.2 MHz.
+  - Recommendation: Update the doc to reflect 1280×720 mode and the actual PLL settings used by tang_primer_vic_new; or change the design to actually deliver 640×480@60Hz if that is the desired target.
+- The document’s architectural flow (VIC-II → Scandoubler → HDMI Out) is coherent with both the fellow pipeline and our current project. The difference is solely in the HDMI encoder stage and target mode:
+  - Fellow projects: video.v + hdmi.sv + TLVDS_OBUF @ ≈31.5/32 MHz.
+  - tang_primer_vic_new: DVI_TX_Top fixed-timing @ 1280×720.
+
+7) Recommendations to Obtain a Visible VIC-II Image Using Existing HDMI
+- If retaining DVI_TX_Top (no HDMI block changes):
+  - Preserve the fixed 1280×720 path and focus on the scaler to feed a clean 1280×720 RGB stream.
+  - Ensure the line length lock and start-of-active calculations do not produce off-by-one artifacts (left cyan band indicates misaligned start/first samples).
+  - Verify VIC φ generation: the VHDL core may expect a 50% duty-cycle 1 MHz φ (“phi”) rather than a pulse; a pulse can stall internal state and lead to black.
+  - Confirm sync polarity through the scaler into DVI_TX_Top matches expectations (polarity/origin of tp0_hs/vs/de used by DVI_TX).
+- If aligning to the fellow approach later (optional):
+  - Provide clk_pixel and clk_pixel_x5 clocks and switch top to the shared wrapper (video.v) + hdmi.sv + serializer.sv.
+  - Feed VIC’s scan-doubled 4-bit/6-bit RGB + active-low syncs directly; adopt video_analyzer.v reset.
+  - Apply TLVDS constraints consistent with your board (Primer vs Nano rules differ).
+
+8) Minimal Debug Checklist for Current Black Screen
+- Confirm φ generation as a continuous 1 MHz square wave (not a 1-cycle strobe).
+- Temporarily force a constant non-zero color during active video in vic_ii_driver to confirm the RGB path (proves HDMI/stage works independent of VIC internal state).
+- Observe hs_out/vs_out activity at the scandoubler output; verify 31 kHz line frequency.
+- Check the scaler’s line length latch and horizontal start; clamp if needed to the expected range for the selected HDMI timing.
+
+9) References (clickable in editor)
+- Shared wrapper: src\misc\video.v
+- HDMI encoder & serializer: src\hdmi\hdmi.sv, src\hdmi\serializer.sv, src\hdmi\tmds_channel.sv, src\hdmi\packet_*.sv
+- Analyzer/OSD: src\misc\video_analyzer.v, src\misc\osd_u8g2.v
+- Fellow builds: build_tm60k.tcl, build_tc60k.tcl
+- Current project HDMI IP: tang_primer_vic_new\src\dvi_tx\dvi_tx.v
+- VIC-II driver/scandoubler: tang_primer_vic_new\src\vic_ii_driver.v, tang_primer_vic_new\src\scandoubler.v
+
+Summary
+- Fellow projects standardize on video.v + hdmi.sv with strict 5× clocking and source-locked timing via video_analyzer.v.
+- tang_primer_vic_new uses vendor DVI TX with a fixed 1280×720 mode and an internal scaler.
+- Both pipelines are valid; the open-source path typically simplifies synchronization at the cost of integrating the HDMI blocks, while the current approach avoids touching HDMI but relies on a robust scaler and correct VIC timing.*** End Patch***}>>()습니다ക്ക്.```**  

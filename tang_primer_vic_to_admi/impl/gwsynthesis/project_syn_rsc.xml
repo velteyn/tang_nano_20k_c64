@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="tp_admi_top" Lut="1" T_Register="52(0)" T_Alu="12(0)" T_Lut="83(1)">
+ <SubModule name="u_pll"/>
+ <SubModule name="u_dvi" Register="28" Lut="63" T_Register="52(28)" T_Alu="12(0)" T_Lut="82(63)">
+  <SubModule name="tmds_gen[0].u_chan" Register="8" Alu="4" Lut="9" T_Register="8(8)" T_Alu="4(4)" T_Lut="9(9)"/>
+  <SubModule name="tmds_gen[1].u_chan" Register="8" Alu="4" Lut="5" T_Register="8(8)" T_Alu="4(4)" T_Lut="5(5)"/>
+  <SubModule name="tmds_gen[2].u_chan" Register="8" Alu="4" Lut="5" T_Register="8(8)" T_Alu="4(4)" T_Lut="5(5)"/>
+  <SubModule name="u_ser"/>
+ </SubModule>
+</Module>
