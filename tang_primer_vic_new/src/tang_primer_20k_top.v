@@ -94,16 +94,16 @@ testpattern testpattern_inst
     .I_single_r  (8'd0               ),
     .I_single_g  (8'd255             ),
     .I_single_b  (8'd0               ),
-    .I_h_total   (12'd800            ),// 640x480@60 total
-    .I_h_sync    (12'd96             ),// 640x480@60 sync
-    .I_h_bporch  (12'd48             ),// 640x480@60 back porch
-    .I_h_res     (12'd640            ),// 640x480@60 active
-    .I_v_total   (12'd525            ),// 640x480@60 total
-    .I_v_sync    (12'd2              ),// 640x480@60 sync
-    .I_v_bporch  (12'd33             ),// 640x480@60 back porch
-    .I_v_res     (12'd480            ),// 640x480@60 active
-    .I_hs_pol    (1'b0               ),// negative
-    .I_vs_pol    (1'b0               ),// negative
+    .I_h_total   (12'd1650           ),// 1280x720@60 total
+    .I_h_sync    (12'd40             ),// 1280x720@60 sync
+    .I_h_bporch  (12'd220            ),// 1280x720@60 back porch
+    .I_h_res     (12'd1280           ),// 1280x720@60 active
+    .I_v_total   (12'd750            ),// 1280x720@60 total
+    .I_v_sync    (12'd5              ),// 1280x720@60 sync
+    .I_v_bporch  (12'd20             ),// 1280x720@60 back porch
+    .I_v_res     (12'd720            ),// 1280x720@60 active
+    .I_hs_pol    (1'b1               ),// positive
+    .I_vs_pol    (1'b1               ),// positive
     .O_de        (tp0_de_in          ),   
     .O_hs        (tp0_hs_in          ),
     .O_vs        (tp0_vs_in          ),
@@ -187,7 +187,7 @@ always @(posedge sys_clk or negedge hdmi4_rst_n) begin
             commit_bank<= wr_bank;
         end else begin
             if(wr_ptr < SRC_W) begin
-                acc <= acc + SRC_W;
+                acc <= acc + 22'd640;
                 if(acc >= line_len_latched) begin
                     acc   <= acc - line_len_latched;
                     if(!wr_bank) linebuf0[wr_ptr] <= {vic_r, vic_g, vic_b};
@@ -273,28 +273,50 @@ end
 reg [9:0]  src_x_rd;
 reg [23:0] vic_pix_read;
 reg [7:0]  vic_r_720, vic_g_720, vic_b_720;
-always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-    if(!hdmi4_rst_n) begin
-        src_x_rd <= 10'd0;
-        vic_pix_read <= 24'd0;
-        vic_r_720 <= 8'd0;
-        vic_g_720 <= 8'd0;
-        vic_b_720 <= 8'd0;
-    end else begin
-        if(tp0_de_in && !de_d) src_x_rd <= 10'd0;
-        if(tp0_de_in) begin
-            src_x_rd <= (x_cnt[10:1] > 10'd639) ? 10'd639 : x_cnt[10:1];
-            vic_pix_read <= (!rd_bank) ? linebuf0[src_x_rd] : linebuf1[src_x_rd];
-            vic_r_720 <= vic_pix_read[23:16];
-            vic_g_720 <= vic_pix_read[15:8];
-            vic_b_720 <= vic_pix_read[7:0];
-        end else begin
+reg [1:0] scale_cnt;
+    always @(posedge pix_clk or negedge hdmi4_rst_n) begin
+        if(!hdmi4_rst_n) begin
+            src_x_rd <= 10'd0;
+            vic_pix_read <= 24'd0;
             vic_r_720 <= 8'd0;
             vic_g_720 <= 8'd0;
             vic_b_720 <= 8'd0;
+            scale_cnt <= 2'd0;
+        end else begin
+            if(tp0_de_in && !de_d) begin 
+                src_x_rd <= 10'd80; // Start reading from index 80 to center the image
+                scale_cnt <= 2'd0;
+            end
+            
+            if(tp0_de_in) begin
+                // 3x Scaling Logic: Advance read pointer every 3 HDMI pixels
+                if (scale_cnt == 2'd2) begin
+                    scale_cnt <= 2'd0;
+                    if (src_x_rd < 10'd639) src_x_rd <= src_x_rd + 10'd1;
+                end else begin
+                    scale_cnt <= scale_cnt + 2'd1;
+                end
+
+                vic_pix_read <= (!rd_bank) ? linebuf0[src_x_rd] : linebuf1[src_x_rd];
+
+                // Pillarbox: 160 pixels black on left/right to maintain 4:3 aspect ratio
+                // 1280 (16:9) - 960 (4:3) = 320. 320/2 = 160.
+                if (x_cnt < 11'd160 || x_cnt >= 11'd1120) begin
+                    vic_r_720 <= 8'd0;
+                    vic_g_720 <= 8'd0;
+                    vic_b_720 <= 8'd0;
+                end else begin
+                    vic_r_720 <= vic_pix_read[23:16];
+                    vic_g_720 <= vic_pix_read[15:8];
+                    vic_b_720 <= vic_pix_read[7:0];
+                end
+            end else begin
+                vic_r_720 <= 8'd0;
+                vic_g_720 <= 8'd0;
+                vic_b_720 <= 8'd0;
+            end
         end
     end
-end
 
 wire [7:0] src_r = USE_VIC ? vic_r_720 : tp0_data_r;
 wire [7:0] src_g = USE_VIC ? vic_g_720 : tp0_data_g;
@@ -341,5 +363,153 @@ DVI_TX_Top DVI_TX_Top_inst
 );
 
 
+
+wire [15:0] c64_addr;
+wire [7:0] c64_data_out;
+wire ram_ce;
+wire ram_we;
+wire io_cycle;
+wire ext_cycle;
+wire refresh_sig;
+wire core_hs;
+wire core_vs;
+wire [7:0] core_r;
+wire [7:0] core_g;
+wire [7:0] core_b;
+wire [9:0] core_debugX;
+wire [8:0] core_debugY;
+wire core_phi;
+wire core_phi2_p;
+wire core_phi2_n;
+wire nmi_ack_w;
+wire romL_w;
+wire romH_w;
+wire UMAXromH_w;
+wire IO7_w;
+wire IOE_w;
+wire IOF_w;
+wire freeze_key_w;
+wire mod_key_w;
+wire tape_play_w;
+wire dma_cycle_w;
+wire [7:0] dma_din_w;
+wire [17:0] audio_l_w;
+wire [17:0] audio_r_w;
+wire [7:0] pb_o_w;
+wire pa2_o_w;
+wire pc2_n_o_w;
+wire sp2_o_w;
+wire sp1_o_w;
+wire cnt2_o_w;
+wire cnt1_o_w;
+wire iec_data_o_w;
+wire iec_clk_o_w;
+wire iec_atn_o_w;
+wire cass_motor_w;
+wire cass_write_w;
+
+fpga64_sid_iec c64_inst (
+    .clk32(sys_clk),
+    .reset_n(hdmi4_rst_n),
+    .bios(2'b00),
+    .pause(1'b0),
+    .pause_out(),
+    .usb_key(8'b0),
+    .kbd_strobe(1'b0),
+    .kbd_reset(1'b0),
+    .shift_mod(2'b0),
+    .ramAddr(c64_addr),
+    .ramDin(8'b0),
+    .ramDout(c64_data_out),
+    .ramCE(ram_ce),
+    .ramWE(ram_we),
+    .io_cycle(io_cycle),
+    .ext_cycle(ext_cycle),
+    .refresh(refresh_sig),
+    .cia_mode(1'b0),
+    .turbo_mode(2'b00),
+    .turbo_speed(2'b00),
+    .vic_variant(2'b00),
+    .ntscMode(1'b1),
+    .hsync(core_hs),
+    .vsync(core_vs),
+    .r(core_r),
+    .g(core_g),
+    .b(core_b),
+    .debugX(core_debugX),
+    .debugY(core_debugY),
+    .phi(core_phi),
+    .phi2_p(core_phi2_p),
+    .phi2_n(core_phi2_n),
+    .game(1'b0),
+    .exrom(1'b0),
+    .io_rom(1'b0),
+    .io_ext(1'b0),
+    .io_data(8'b0),
+    .irq_n(1'b1),
+    .nmi_n(1'b1),
+    .nmi_ack(nmi_ack_w),
+    .romL(romL_w),
+    .romH(romH_w),
+    .UMAXromH(UMAXromH_w),
+    .IO7(IO7_w),
+    .IOE(IOE_w),
+    .IOF(IOF_w),
+    .freeze_key(freeze_key_w),
+    .mod_key(mod_key_w),
+    .tape_play(tape_play_w),
+    .dma_req(1'b0),
+    .dma_cycle(dma_cycle_w),
+    .dma_addr(16'b0),
+    .dma_dout(8'b0),
+    .dma_din(dma_din_w),
+    .dma_we(1'b0),
+    .irq_ext_n(1'b1),
+    .joyA(7'b0),
+    .joyB(7'b0),
+    .pot1(8'b0),
+    .pot2(8'b0),
+    .pot3(8'b0),
+    .pot4(8'b0),
+    .audio_l(audio_l_w),
+    .audio_r(audio_r_w),
+    .sid_filter(2'b00),
+    .sid_ver(2'b00),
+    .sid_mode(3'b000),
+    .sid_cfg(4'b0000),
+    .sid_fc_off_l(13'b0),
+    .sid_fc_off_r(13'b0),
+    .sid_ld_clk(1'b0),
+    .sid_ld_addr(12'b0),
+    .sid_ld_data(16'b0),
+    .sid_ld_wr(1'b0),
+    .sid_digifix(1'b0),
+    .pb_i(8'b0),
+    .pb_o(pb_o_w),
+    .pa2_i(1'b0),
+    .pa2_o(pa2_o_w),
+    .pc2_n_o(pc2_n_o_w),
+    .flag2_n_i(1'b1),
+    .sp2_i(1'b0),
+    .sp2_o(sp2_o_w),
+    .sp1_i(1'b0),
+    .sp1_o(sp1_o_w),
+    .cnt2_i(1'b0),
+    .cnt2_o(cnt2_o_w),
+    .cnt1_i(1'b0),
+    .cnt1_o(cnt1_o_w),
+    .iec_data_o(iec_data_o_w),
+    .iec_data_i(1'b1),
+    .iec_clk_o(iec_clk_o_w),
+    .iec_clk_i(1'b1),
+    .iec_atn_o(iec_atn_o_w),
+    .c64rom_addr(14'b0),
+    .c64rom_data(8'b0),
+    .c64rom_wr(1'b0),
+    .cass_motor(cass_motor_w),
+    .cass_write(cass_write_w),
+    .cass_sense(1'b0),
+    .cass_read(1'b0)
+);
 
 endmodule

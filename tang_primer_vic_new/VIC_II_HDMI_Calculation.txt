@@ -1,0 +1,62 @@
+Problem Analysis: VIC-II to HDMI 720p Scaling
+
+1. HDMI Output Specification (Current Monitor Mode)
+   - Resolution: 1280x720 (720p)
+   - Refresh Rate: 60 Hz
+   - Aspect Ratio: 16:9
+   - Pixel Clock: 74.25 MHz
+   - Horizontal Total: 1650 pixels
+   - Vertical Total: 750 lines
+   - Line Frequency: 74.25 MHz / 1650 = 45.00 kHz
+   - Frame Frequency: 45 kHz / 750 = 60.00 Hz
+
+2. Target Display Specification (Desired Output)
+   - Aspect Ratio: 4:3 (Classic TV)
+   - Target Width: 720 pixels height * (4/3) = 960 pixels width
+   - Pillarboxing: (1280 - 960) / 2 = 160 pixels black on Left/Right
+   - Scaling: To fill 960 pixels from C64 source.
+
+3. VIC-II Specification (Source)
+   - Standard NTSC Dot Clock: ~8.18 MHz
+   - Standard NTSC Line Frequency: ~15.75 kHz
+   - Visible Pixels: ~320 (Hires) / ~400 (Border included)
+   - Total Line Cycles: 63-65 cycles depending on model
+
+4. Current Implementation Faults
+   a. Clock Frequency Mismatch
+      - System Clock: 27.00 MHz
+      - Current Divider: /4
+      - Current VIC-II Clock: 27 MHz / 4 = 6.75 MHz
+      - Required VIC-II Clock: ~8.18 MHz
+      - Error: (6.75 - 8.18) / 8.18 = -17.5% (Too Slow)
+      - Result: Line frequency is ~13 kHz instead of 15.75 kHz.
+      - Sync Issue: HDMI buffer expects lines at a certain rate; VIC-II delivers them too slowly.
+
+   b. Scaling Ratio Mismatch
+      - HDMI Line Rate (45 kHz) / VIC-II Line Rate (13 kHz) = ~3.46
+      - HDMI Line Rate (45 kHz) / Target VIC-II (15.75 kHz) = ~2.85
+      - Ideally, we want an integer ratio or handled via buffer. 
+      - 3x Vertical Scaling implies 15 kHz source.
+
+   c. Horizontal Scaling
+      - Target Width: 960 HDMI pixels
+      - Source Width (Active): ~320 pixels
+      - Ratio: 960 / 320 = 3.0
+      - We need exact 3x horizontal scaling.
+
+5. Proposed Correction
+   1. Adjust VIC-II Clock Generation in `vic_ii_driver.v`:
+      - Target: 8.18 MHz from 27 MHz.
+      - Ratio: 8.18 / 27 ~= 0.303
+      - Accumulator: Add 818, Modulo 2700 (or simplified).
+      - Simplification: 9 / 30 = 0.3. 27 * 0.3 = 8.1 MHz.
+      - Use a fractional clock enable.
+   
+   2. Verify Line Frequency:
+      - 8.1 MHz / (Cycles per line).
+      - If NTSC 6567R8 uses 65 cycles/line?
+      - 8.1 MHz / 520 dots (approx) = 15.5 kHz.
+      - This is closer to 45 kHz / 3 = 15 kHz.
+
+   3. Re-verify Buffer Logic in `tang_primer_20k_top.v`:
+      - Ensure buffer write (VIC domain) and read (HDMI domain) don't overrun.

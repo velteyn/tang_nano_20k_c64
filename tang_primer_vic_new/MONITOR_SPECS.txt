@@ -1,4 +1,8 @@
 General
+
+Wee report that with 1280x720 @ 60Hz and the Gowing vendor HDMI implementation the colored test bands display very well
+actually the monitor is connected through a DVI to HDMI adapter.
+
 Model Name SyncMaster 2033SW
 LCD Panel
 Size 20 inch (50 cm)

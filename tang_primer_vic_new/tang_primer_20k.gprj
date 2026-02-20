@@ -5,6 +5,13 @@
     <Version>5</Version>
     <Device name="GW2A-18C" pn="GW2A-LV18PG256C8/I7">gw2a18c-011</Device>
     <FileList>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/mos6526.v" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_filter.sv" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_tables.sv" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv" type="file.verilog" enable="1"/>
         <File path="src/TMDS_rPLL.v" type="file.verilog" enable="1"/>
         <File path="src/clock_gen.v" type="file.verilog" enable="0"/>
         <File path="src/dvi_tx/dvi_tx.v" type="file.verilog" enable="1"/>
@@ -12,6 +19,21 @@
         <File path="src/tang_primer_20k_top.v" type="file.verilog" enable="1"/>
         <File path="src/testpattern.v" type="file.verilog" enable="1"/>
         <File path="src/vic_ii_driver.v" type="file.verilog" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/cpu_6510.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_buslogic.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_keyboard.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_rgbcolor.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_prom/gowin_prom_basic.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_prom/gowin_prom_chargen.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sdpb/gowin_sdpb_kernal_8k.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_2k.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_8k.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_cram.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_ALU.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_MCode.vhd" type="file.vhdl" enable="1"/>
+        <File path="C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_Pack.vhd" type="file.vhdl" enable="1"/>
         <File path="src/video_vicII_656x.vhd" type="file.vhdl" enable="1"/>
         <File path="src/tang_primer_20k.cst" type="file.cst" enable="1"/>
         <File path="src/tang_primer_20k.sdc" type="file.sdc" enable="1"/>

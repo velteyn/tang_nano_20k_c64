@@ -86,6 +86,10 @@ reg        cnt_out_r;
 reg [ 2:0] cnt_pulsecnt;
 
 reg        int_reset;
+reg        old_flag;
+reg        flag;
+reg        cra6_prev;
+reg [7:0]  imr_reg;
 
 wire       rd = phi2_n & !cs_n & rw;
 wire       wr = phi2_n & !cs_n & !rw;
@@ -153,8 +157,6 @@ end
 
 // FLAG Input
 always @(posedge clk) begin
-	reg old_flag, flag;
-
 	old_flag <= flag_n;
 	if(old_flag & ~flag_n) flag <= 1'b1;
   
@@ -478,7 +480,6 @@ end
 
 // CNT Input/Output
 always @(posedge clk) begin
-  reg cra6_prev;
   if (!res_n) begin
     cnt_in_r     <= 1'b1;
     cnt_in_prev  <= 1'b1;
@@ -505,8 +506,6 @@ wire [4:0] icr_adj = {icr[4:2], timer_b_int, icr[0]};
 
 // Interrupt Control
 always @(posedge clk) begin
-  reg [7:0] imr_reg;
-
   if (!res_n) begin
     imr       <= 5'h00;
     imr_reg   <= 0;

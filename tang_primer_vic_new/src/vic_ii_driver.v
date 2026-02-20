@@ -14,20 +14,30 @@ module vic_ii_driver (
     // Clock Generation for VIC-II
     // -------------------------------------------------------------------------
     // VIC-II needs ~8.18 MHz (NTSC). 
-    // New clk_sys = 31.5 MHz.
-    // 31.5 / 4 = 7.875 MHz (Close enough for testing).
+    // New clk_sys = 27 MHz.
+    // Target: 8.1818 MHz (NTSC Color Carrier * 2ish?)
+    // 27 MHz * 9 / 30 = 8.1 MHz. Close enough.
+    // Use an accumulator for fractional division.
     
-    reg [1:0] clk_div;
-    reg       phi_en;   // 1 MHz enable (approx)
-    reg       pix_en;   // 8 MHz enable (approx)
+    reg [4:0] clk_acc; // 5-bit accumulator (0-31)
+    reg       phi_en;  // 1 MHz enable (approx)
+    reg       pix_en;  // 8.1 MHz enable (approx)
     
     always @(posedge clk_sys or negedge rst_n) begin
         if (!rst_n) begin
-            clk_div <= 0;
+            clk_acc <= 0;
             pix_en <= 0;
         end else begin
-            clk_div <= clk_div + 2'd1;
-            pix_en <= (clk_div == 2'd3); // Pulse every 4 cycles -> 7.875 MHz
+            // Add 9, Modulo 30? Or simply:
+            // 27 * 3 / 10 = 8.1 MHz.
+            // Add 3. If >= 10, subtract 10, enable = 1.
+            if (clk_acc >= 5'd10) begin
+                clk_acc <= clk_acc - 5'd10 + 5'd3;
+                pix_en <= 1;
+            end else begin
+                clk_acc <= clk_acc + 5'd3;
+                pix_en <= 0;
+            end
         end
     end
     
@@ -224,50 +234,59 @@ module vic_ii_driver (
     end
 
     // -------------------------------------------------------------------------
-    // Scan Doubler
+    // Output Assignment (Bypass Scandoubler for Line Buffer usage)
     // -------------------------------------------------------------------------
-    wire sd_hs, sd_vs;
-    wire [5:0] sd_r, sd_g, sd_b; // Scan doubler outputs 6-bit?
-    // Check scandoubler source: output reg [5:0] r_out
+    // We are using a Line Buffer in top level to handle 15kHz -> 45kHz scaling.
+    // So we should output the raw 15kHz VIC-II signals directly.
+    // The scandoubler creates 31kHz which causes non-integer scaling artifacts.
     
+    // Scandoubler is bypassed/ignored.
+    
+    assign hs_out = vic_hs;
+    assign vs_out = vic_vs;
+    
+    // RGB 8-bit output
+    assign r_out = vic_r;
+    assign g_out = vic_g;
+    assign b_out = vic_b;
+    
+    // DE Generation
+    // VIC-II doesn't output DE explicitly, but we can assume valid during non-sync?
+    // Or just use HS/VS to gate it in top level?
+    // In top level, vic_de is used but not critical for buffer write (uses hs_fall).
+    // Let's assign it based on HS/VS logic.
+    // Active High DE.
+    assign de_out = !(vic_hs || vic_vs); // Assuming Active High Syncs from core?
+    // Wait, VIC-II core sync polarity?
+    // "hSync : out std_logic"
+    // Standard VIC-II is Active Low?
+    // If Active Low (Idle High, Pulse Low): !Sync is Pulse.
+    // If Active High (Idle Low, Pulse High): !Sync is Idle.
+    // Let's assume Active High for now based on previous scandoubler usage.
+    // If it was active low, scandoubler would have inverted it?
+    // Scandoubler expects positive syncs usually.
+    // Let's stick to simple assignment.
+    
+    // Keep scandoubler instance for reference but disconnect its outputs
+    /*
     scandoubler #(
         .HCNT_WIDTH(10) 
     ) u_sd (
         .clk_sys(clk_sys),
-        .bypass(1'b0),
-        .ce_divider(1'b1), // Force 1:2 mode (Input 15.75MHz, Output 31.5MHz)
-        .pixel_ena(),      
-        .scanlines(2'b00), 
-        
+        .bypass(1'b1),
+        .ce_divider(1'b1),
+        .scanlines(2'b00), // Disable scanlines
         .hs_in(vic_hs),
         .vs_in(vic_vs),
         .r_in(vic_r[7:4]), 
         .g_in(vic_g[7:4]),
         .b_in(vic_b[7:4]),
-        
-        .hs_out(sd_hs),
-        .vs_out(sd_vs),
-        .r_out(sd_r),
-        .g_out(sd_g),
-        .b_out(sd_b)
+        .hs_out(),
+        .vs_out(),
+        .r_out(),
+        .g_out(),
+        .b_out()
     );
-
-    // Sync Polarity Correction for HDMI
-    // Based on memory: Syncs should NOT be inverted if monitor expects standard VGA syncs.
-    // VIC-II core outputs active-low syncs?
-    // Let's assume the scandoubler preserves polarity.
-    // Most HDMI monitors expect active-high VS/HS for 640x480?
-    // Wait, VGA 640x480 standard is Active LOW for both.
-    // So if sd_hs/sd_vs are 0 during sync, it's correct.
-    
-    assign hs_out = sd_hs;
-    assign vs_out = sd_vs;
-    assign r_out  = {sd_r, 2'b00};
-    assign g_out  = {sd_g, 2'b00};
-    assign b_out  = {sd_b, 2'b00};
-    
-    // Precise DE Generation
-    // Active High DE. Must be LOW during HS/VS pulses.
-    assign de_out = (sd_hs & sd_vs); 
+    */
 
 endmodule
