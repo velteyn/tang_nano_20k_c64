@@ -126,6 +126,7 @@ begin
 end 
 
 // VIC-II driver (runs off 27MHz system clock to avoid HDMI clock changes)
+/*
 vic_ii_driver u_vic (
     .clk_sys(sys_clk),
     .rst_n(hdmi4_rst_n),
@@ -136,17 +137,28 @@ vic_ii_driver u_vic (
     .b_out(vic_b),
     .de_out(vic_de)
 );
+*/
+
+// Connect existing C64 core video signals to HDMI pipeline
+assign vic_hs = core_hs;
+assign vic_vs = core_vs;
+assign vic_r = core_r;
+assign vic_g = core_g;
+assign vic_b = core_b;
+assign vic_de = !(core_hs || core_vs); // Approximate DE
+
+
 
 localparam SRC_W = 640;
 
 reg        vic_hs_d;
-always @(posedge sys_clk) vic_hs_d <= vic_hs;
+always @(posedge pix_clk) vic_hs_d <= vic_hs;
 wire       vic_hs_fall = vic_hs_d & ~vic_hs;
 
 reg [11:0] line_len_cnt     = 12'd0;
 reg [11:0] line_len_latched = 12'd860;
 reg        line_len_locked  = 1'b0;
-always @(posedge sys_clk or negedge hdmi4_rst_n) begin
+always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
         line_len_cnt     <= 12'd0;
         line_len_latched <= 12'd860;
@@ -172,7 +184,7 @@ reg [23:0] linebuf1 [0:SRC_W-1];
 reg        commit_tgl = 1'b0;
 reg        commit_bank = 1'b0;
 
-always @(posedge sys_clk or negedge hdmi4_rst_n) begin
+always @(posedge pix_clk or negedge hdmi4_rst_n) begin
     if(!hdmi4_rst_n) begin
         wr_bank   <= 1'b0;
         wr_ptr    <= 10'd0;
@@ -408,18 +420,35 @@ wire iec_atn_o_w;
 wire cass_motor_w;
 wire cass_write_w;
 
+wire [7:0] c64_data_in;
+wire [6:0] joyA_w = 7'b0;
+wire [6:0] joyB_w = 7'b0;
+wire [7:0] usb_key_w = 8'b0;
+wire kbd_strobe_w = 1'b0;
+wire kbd_reset_w = 1'b0;
+
+
+ram64k u_ram (
+    .clk(serial_clk), // 5x pixel clock (157.5MHz) to ensure data is latched quickly
+    .ce(ram_ce),
+    .we(ram_we),
+    .addr(c64_addr),
+    .din(c64_data_out),
+    .dout(c64_data_in)
+);
+
 fpga64_sid_iec c64_inst (
-    .clk32(sys_clk),
+    .clk32(pix_clk),       // Using 31.5MHz (derived from HDMI PLL) for synchronous video and ~98% speed
     .reset_n(hdmi4_rst_n),
     .bios(2'b00),
     .pause(1'b0),
     .pause_out(),
-    .usb_key(8'b0),
-    .kbd_strobe(1'b0),
-    .kbd_reset(1'b0),
+    .usb_key(usb_key_w),
+    .kbd_strobe(kbd_strobe_w),
+    .kbd_reset(kbd_reset_w),
     .shift_mod(2'b0),
     .ramAddr(c64_addr),
-    .ramDin(8'b0),
+    .ramDin(c64_data_in),
     .ramDout(c64_data_out),
     .ramCE(ram_ce),
     .ramWE(ram_we),
@@ -465,15 +494,15 @@ fpga64_sid_iec c64_inst (
     .dma_din(dma_din_w),
     .dma_we(1'b0),
     .irq_ext_n(1'b1),
-    .joyA(7'b0),
-    .joyB(7'b0),
+    .joyA(joyA_w),
+    .joyB(joyB_w),
     .pot1(8'b0),
     .pot2(8'b0),
     .pot3(8'b0),
     .pot4(8'b0),
     .audio_l(audio_l_w),
     .audio_r(audio_r_w),
-    .sid_filter(2'b00),
+    .sid_filter(2'b01),
     .sid_ver(2'b00),
     .sid_mode(3'b000),
     .sid_cfg(4'b0000),
@@ -511,5 +540,26 @@ fpga64_sid_iec c64_inst (
     .cass_sense(1'b0),
     .cass_read(1'b0)
 );
+
+endmodule
+
+module ram64k (
+    input clk,
+    input ce,
+    input we,
+    input [15:0] addr,
+    input [7:0] din,
+    output reg [7:0] dout
+);
+
+    reg [7:0] mem [0:65535];
+
+    always @(posedge clk) begin
+        if (ce) begin
+            if (we) 
+                mem[addr] <= din;
+            dout <= mem[addr];
+        end
+    end
 
 endmodule

@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------
 --  C64 Top level for Tang Primer 20k
---  2025 Jules
+--  2025 Jules (Modified to use BRAM and enable C64 core)
 --  based on the work of many others
 --
 --  FPGA64 is Copyrighted 2005-2008 by Peter Wendrich (pwsoft@syntiac.com)
@@ -45,7 +45,7 @@ entity tang_primer_20k_c64_top is
     sd_cmd      : inout std_logic;
     sd_dat      : inout std_logic_vector(3 downto 0);
 
-    -- DDR3 Memory Interface
+    -- DDR3 Memory Interface (Unused, using BRAM)
     ddr3_a      : out std_logic_vector(13 downto 0);
     ddr3_ba     : out std_logic_vector(2 downto 0);
     ddr3_ck_p   : out std_logic;
@@ -67,7 +67,7 @@ end;
 architecture Behavioral_top of tang_primer_20k_c64_top is
 
   signal clk_x4 : std_logic;
-  signal clk_mem : std_logic; -- 315MHz for DDR3
+  signal clk_mem : std_logic; -- 315MHz
   signal clk_ck : std_logic;
   signal clk32 : std_logic;
   
@@ -82,44 +82,14 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal reset_n_s : std_logic := '0';
   signal reset_cnt : unsigned(19 downto 0) := (others => '0');
 
-  -- DDR3 Reset Synchronization
-  signal ddr3_rst_sync1 : std_logic := '0';
-  signal ddr3_rst_sync2 : std_logic := '0';
-  signal ddr3_reset_n_sync : std_logic := '0';
-
-  signal c64_addr : unsigned(26 downto 0);
+  signal c64_addr : unsigned(15 downto 0);
   signal sdram_data : unsigned(7 downto 0);
   signal c64_data_out : unsigned(7 downto 0);
   signal ram_ce : std_logic;
   signal ram_we : std_logic;
   signal idle : std_logic;
 
-  signal ddr3_busy : std_logic;
-  signal ddr3_data_ready : std_logic;
-  signal ddr3_dout : std_logic_vector(15 downto 0);
-  signal ddr3_din : std_logic_vector(15 downto 0);
-  signal ddr3_rd : std_logic;
-  signal ddr3_wr : std_logic;
-  signal ddr3_refresh : std_logic;
-
-  -- CDC Signals
-  signal req_toggle : std_logic := '0';
-  signal ack_toggle : std_logic := '0';
-  signal ack_sync1, ack_sync2 : std_logic := '0';
-  signal req_sync1, req_sync2 : std_logic := '0';
-  signal req_prev : std_logic := '0';
-  
-  signal ddr_cmd_reg : std_logic; -- 0:Read, 1:Write
-  signal ddr_addr_reg : std_logic_vector(26 downto 0);
-  signal ddr_din_reg : std_logic_vector(15 downto 0);
-  signal ddr_dout_reg : std_logic_vector(15 downto 0);
-  
-  signal mem_busy : std_logic := '0';
-   
-   type cdc_state_t is (S_IDLE, S_ISSUE, S_WAIT_READ, S_WAIT_WRITE);
-   signal cdc_state : cdc_state_t := S_IDLE;
- 
-   signal ntscMode : std_logic;
+  signal ntscMode : std_logic := '0'; -- PAL by default
   signal hsync : std_logic;
   signal vsync : std_logic;
   
@@ -140,12 +110,12 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal b : unsigned(7 downto 0);
   signal audio_data_l : std_logic_vector(17 downto 0);
   signal audio_data_r : std_logic_vector(17 downto 0);
-  signal joyA : std_logic_vector(6 downto 0);
-  signal joyB : std_logic_vector(6 downto 0);
-  signal pot1 : std_logic_vector(7 downto 0);
-  signal pot2 : std_logic_vector(7 downto 0);
-  signal pot3 : std_logic_vector(7 downto 0);
-  signal pot4 : std_logic_vector(7 downto 0);
+  signal joyA : std_logic_vector(6 downto 0) := (others => '0');
+  signal joyB : std_logic_vector(6 downto 0) := (others => '0');
+  signal pot1 : std_logic_vector(7 downto 0) := (others => '0');
+  signal pot2 : std_logic_vector(7 downto 0) := (others => '0');
+  signal pot3 : std_logic_vector(7 downto 0) := (others => '0');
+  signal pot4 : std_logic_vector(7 downto 0) := (others => '0');
 
   signal nmi_ack_s : std_logic;
   signal romL_s : std_logic;
@@ -159,7 +129,7 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
   signal tape_play_s : std_logic;
   signal dma_din_s : unsigned(7 downto 0);
   signal dma_addr_s : unsigned(15 downto 0);
-   signal dma_dout_s : unsigned(7 downto 0);
+  signal dma_dout_s : unsigned(7 downto 0);
   signal pb_o_s : unsigned(7 downto 0);
   
   signal audio_div : unsigned(8 downto 0);
@@ -172,48 +142,6 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
         lock: out std_logic;
         clkoutd: out std_logic;
         clkin: in std_logic
-    );
-  end component;
-
-  component ddr3_controller is
-    generic (
-      ROW_WIDTH: integer := 14;
-      COL_WIDTH: integer := 10;
-      BANK_WIDTH: integer := 3
-    );
-    port (
-      pclk: in std_logic;
-      fclk: in std_logic;
-      ck: in std_logic;
-      resetn: in std_logic;
-      rd: in std_logic;
-      wr: in std_logic;
-      refresh: in std_logic;
-      addr: in std_logic_vector(26 downto 0);
-      din: in std_logic_vector(15 downto 0);
-      dout: out std_logic_vector(15 downto 0);
-      dout128: out std_logic_vector(127 downto 0);
-      data_ready: out std_logic;
-      busy: out std_logic;
-      write_level_done: out std_logic;
-      wstep: out std_logic_vector(7 downto 0);
-      read_calib_done: out std_logic;
-      rclkpos: out std_logic_vector(1 downto 0);
-      rclksel: out std_logic_vector(2 downto 0);
-      debug: out std_logic_vector(63 downto 0);
-      DDR3_DQ: inout std_logic_vector(15 downto 0);
-      DDR3_DQS: inout std_logic_vector(1 downto 0);
-      DDR3_A: out std_logic_vector(13 downto 0);
-      DDR3_BA: out std_logic_vector(2 downto 0);
-      DDR3_nRAS: out std_logic;
-      DDR3_nCAS: out std_logic;
-      DDR3_nWE: out std_logic;
-      DDR3_nCS: out std_logic;
-      DDR3_CK: out std_logic;
-      DDR3_CKE: out std_logic;
-      DDR3_nRESET: out std_logic;
-      DDR3_DM: out std_logic_vector(1 downto 0);
-      DDR3_ODT: out std_logic
     );
   end component;
 
@@ -245,10 +173,36 @@ architecture Behavioral_top of tang_primer_20k_c64_top is
     );
   end component;
 
+  -- 64K Block RAM for C64 Main Memory
+  component ram64k is
+    port (
+        clk     : in  std_logic;
+        ce      : in  std_logic;
+        we      : in  std_logic;
+        addr    : in  unsigned(15 downto 0);
+        din     : in  unsigned(7 downto 0);
+        dout    : out unsigned(7 downto 0)
+    );
+  end component;
+
 begin
 
-  -- DDR3 Clock Output
-  ddr3_ck_n <= not ddr3_ck_p;
+  -- Unused DDR3 pins
+  ddr3_ck_n <= '0';
+  ddr3_ck_p <= '0';
+  ddr3_cke <= '0';
+  ddr3_cs_n <= '1';
+  ddr3_ras_n <= '1';
+  ddr3_cas_n <= '1';
+  ddr3_we_n <= '1';
+  ddr3_reset_n <= '0';
+  ddr3_odt <= '0';
+  ddr3_a <= (others => '0');
+  ddr3_ba <= (others => '0');
+  ddr3_dm <= (others => '0');
+  ddr3_dq <= (others => 'Z');
+  ddr3_dqs_p <= (others => 'Z');
+  ddr3_dqs_n <= (others => 'Z');
 
   pll_inst: Gowin_rPLL_Primer
     port map (
@@ -259,8 +213,6 @@ begin
       clkin => clk
     );
     
-    -- clk_x4 <= clk_mem; -- Removed alias, now separate output
-
   -- Video Clock Divider (Divide by 5 for 157.5MHz -> 31.5MHz)
   u_clkdiv_video: CLKDIV
     generic map (
@@ -274,113 +226,164 @@ begin
         CALIB => '0'
     );
 
-  u_clkdiv: CLKDIV
-    generic map (
-        DIV_MODE => "4"
-    )
-    port map (
-        CLKOUT => clk_ddr,
-        HCLKIN => clk_mem,
-        RESETN => pll_locked,
-        CALIB => '0'
-    );
-
-  -- Synchronize reset to clk_mem domain for DDR3 controller
-  process(clk_mem)
-  begin
-    if rising_edge(clk_mem) then
-      ddr3_rst_sync1 <= reset_n_s and pll_locked;
-      ddr3_rst_sync2 <= ddr3_rst_sync1;
-      ddr3_reset_n_sync <= ddr3_rst_sync2;
-    end if;
-  end process;
-
-  -- DDR3 Controller - DISABLED FOR VIDEO TEST
-  -- ddr3_controller_inst: ddr3_controller
-  --   generic map (
-  --     ROW_WIDTH => 14
-  --   )
-  --   port map (
-  --     pclk => clk_ddr,
-  --     fclk => clk_mem,
-  --     ck => clk_ck,
-  --     resetn => ddr3_reset_n_sync,
-  --     rd => ddr3_rd,
-  --     wr => ddr3_wr,
-  --     refresh => ddr3_refresh,
-  --     addr => ddr_addr_reg,
-  --     din => ddr_din_reg,
-  --     dout => ddr3_dout,
-  --     data_ready => ddr3_data_ready,
-  --     busy => ddr3_busy,
-  --     DDR3_DQ => ddr3_dq,
-  --     DDR3_DQS => ddr3_dqs_p,
-  --     DDR3_A => ddr3_a,
-  --     DDR3_BA => ddr3_ba,
-  --     DDR3_nRAS => ddr3_ras_n,
-  --     DDR3_nCAS => ddr3_cas_n,
-  --     DDR3_nWE => ddr3_we_n,
-  --     DDR3_nCS => ddr3_cs_n,
-  --     DDR3_CK => ddr3_ck_p,
-  --     DDR3_CKE => ddr3_cke,
-  --     DDR3_nRESET => ddr3_reset_n,
-  --     DDR3_DM => ddr3_dm,
-  --     DDR3_ODT => ddr3_odt,
-  --     write_level_done => open,
-  --     wstep => open,
-  --     read_calib_done => open,
-  --     rclkpos => open,
-  --     rclksel => open,
-  --     debug => open,
-  --     dout128 => open
-  --   );
-
-  -- TEST PATTERN GENERATOR
-  -- Simple PAL-ish timing for 31.5MHz pixel clock
-  -- Line: 2016 clocks (15.625 kHz)
-  -- Frame: 625 lines (50 Hz)
-  
+  -- Internal Reset Logic
   process(clk32)
-    variable h_cnt : integer range 0 to 2047 := 0;
-    variable v_cnt : integer range 0 to 1023 := 0;
   begin
     if rising_edge(clk32) then
-       h_cnt := h_cnt + 1;
-       if h_cnt = 2016 then
-          h_cnt := 0;
-          v_cnt := v_cnt + 1;
-          if v_cnt = 312 then
-             v_cnt := 0;
-          end if;
-       end if;
-       
-       -- Sync Generation (Active Low)
-       -- HS: Start of line. Width ~150 clocks.
-       if h_cnt < 150 then
-          hsync <= '0';
-       else
-          hsync <= '1';
-       end if;
-       
-       -- VS: Start of frame. Width ~3 lines (6048 clocks).
-       if v_cnt < 3 then
-          vsync <= '0';
-       else
-          vsync <= '1';
-       end if;
-       
-       -- White Square
-       if (h_cnt > 800 and h_cnt < 1200) and (v_cnt > 200 and v_cnt < 400) then
-          r <= (others => '1');
-          g <= (others => '1');
-          b <= (others => '1');
-       else
-          r <= (others => '0');
-          g <= (others => '0');
-          b <= (others => '0');
-       end if;
+      if pll_locked = '0' then
+        reset_cnt <= (others => '0');
+        reset_n_s <= '0';
+      else
+        if reset_cnt /= x"FFFFF" then
+          reset_cnt <= reset_cnt + 1;
+          reset_n_s <= '0';
+        else
+          reset_n_s <= '1';
+        end if;
+      end if;
     end if;
   end process;
+
+  -- Instantiate C64 Core
+  c64_core: entity work.fpga64_sid_iec
+  generic map (
+    DUAL => DUAL
+  )
+  port map (
+    clk32        => clk32,
+    reset_n      => reset_n_s,
+    bios         => "00",
+    pause        => '0',
+    pause_out    => open,
+
+    -- Keyboard
+    usb_key      => (others => '0'),
+    kbd_strobe   => '0',
+    kbd_reset    => '0',
+    shift_mod    => "00",
+
+    -- External Memory (connected to BRAM)
+    ramAddr      => c64_addr,
+    ramDin       => sdram_data,
+    ramDout      => c64_data_out,
+    ramCE        => ram_ce,
+    ramWE        => ram_we,
+    io_cycle     => open,
+    ext_cycle    => open,
+    refresh      => idle,
+
+    cia_mode     => '0',
+    turbo_mode   => "00",
+    turbo_speed  => "00",
+
+    vic_variant  => "00",
+    ntscMode     => ntscMode,
+    hsync        => hsync,
+    vsync        => vsync,
+    r            => r,
+    g            => g,
+    b            => b,
+    debugX       => open,
+    debugY       => open,
+
+    phi          => open,
+    phi2_p       => open,
+    phi2_n       => open,
+
+    game         => '1',
+    exrom        => '1',
+    io_rom       => '1',
+    io_ext       => '0',
+    io_data      => (others => '0'),
+    irq_n        => '1',
+    nmi_n        => '1',
+    nmi_ack      => nmi_ack_s,
+    romL         => romL_s,
+    romH         => romH_s,
+    UMAXromH     => UMAXromH_s,
+    IO7          => IO7_s,
+    IOE          => IOE_s,
+    IOF          => IOF_s,
+    freeze_key   => freeze_key_s,
+    mod_key      => mod_key_s,
+    tape_play    => tape_play_s,
+
+    -- DMA
+    dma_req      => '0',
+    dma_cycle    => open,
+    dma_addr     => (others => '0'),
+    dma_dout     => (others => '0'),
+    dma_din      => dma_din_s,
+    dma_we       => '0',
+    irq_ext_n    => '1',
+
+    -- Joystick
+    joyA         => joyA,
+    joyB         => joyB,
+    pot1         => pot1,
+    pot2         => pot2,
+    pot3         => pot3,
+    pot4         => pot4,
+
+    -- SID
+    audio_l      => audio_data_l,
+    audio_r      => audio_data_r,
+    sid_filter   => "11",
+    sid_ver      => "00",
+    sid_mode     => "000",
+    sid_cfg      => "1111",
+    sid_fc_off_l => (others => '0'),
+    sid_fc_off_r => (others => '0'),
+    sid_ld_clk   => clk32,
+    sid_ld_addr  => (others => '0'),
+    sid_ld_data  => (others => '0'),
+    sid_ld_wr    => '0',
+    sid_digifix  => '0',
+
+    -- User Port
+    pb_i         => (others => '1'),
+    pb_o         => pb_o_s,
+    pa2_i        => '1',
+    pa2_o        => open,
+    pc2_n_o      => open,
+    flag2_n_i    => '1',
+    sp2_i        => '1',
+    sp2_o        => open,
+    sp1_i        => '1',
+    sp1_o        => open,
+    cnt2_i       => '1',
+    cnt2_o       => open,
+    cnt1_i       => '1',
+    cnt1_o       => open,
+
+    -- IEC
+    iec_data_o   => open,
+    iec_data_i   => '1',
+    iec_clk_o    => open,
+    iec_clk_i    => '1',
+    iec_atn_o    => open,
+
+    -- ROM Loading (Disabled, using initialized internal ROMs)
+    c64rom_addr  => (others => '0'),
+    c64rom_data  => (others => '0'),
+    c64rom_wr    => '0',
+
+    cass_motor   => open,
+    cass_write   => open,
+    cass_sense   => '1',
+    cass_read    => '1'
+  );
+
+  -- Instantiate 64K BRAM
+  ram_inst: ram64k
+  port map (
+    clk     => clk32, -- Using same clock as core
+    ce      => ram_ce,
+    we      => ram_we,
+    addr    => c64_addr,
+    din     => c64_data_out,
+    dout    => sdram_data
+  );
 
   video_inst: video
   port map (
@@ -388,14 +391,14 @@ begin
     clk_pixel_x5 => clk_x4, -- 157.5MHz
     pll_lock => pll_locked,
     audio_div => audio_div,
-    ntscmode => '0', -- Force PAL for test
-    vs_in_n => vsync, -- Driven by TPG
-    hs_in_n => hsync, -- Driven by TPG
-    r_in => r(7 downto 4), -- Driven by TPG
+    ntscmode => ntscMode,
+    vs_in_n => vsync,
+    hs_in_n => hsync,
+    r_in => r(7 downto 4),
     g_in => g(7 downto 4),
     b_in => b(7 downto 4),
-    audio_l => (others => '0'), -- Mute audio
-    audio_r => (others => '0'),
+    audio_l => audio_data_l, -- Connected Audio
+    audio_r => audio_data_r,
     osd_status => osd_status,
     mcu_start => '0',
     mcu_osd_strobe => '0',
@@ -409,7 +412,6 @@ begin
     tmds_d_p => tmds_d_p
   );
 
-  -- Missing assignments restored
   audio_div <= to_unsigned(327,9); -- PAL value
   leds_n(0) <= not pll_locked;
   leds_n(1) <= '1';
