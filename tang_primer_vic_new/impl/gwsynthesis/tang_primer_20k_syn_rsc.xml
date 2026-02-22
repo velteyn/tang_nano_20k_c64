@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Module name="tang_primer_20k_top" Register="168" Alu="33" Lut="230" Bsram="4" T_Register="935(168)" T_Alu="174(33)" T_Lut="1472(230)" T_Bsram="7(4)">
- <SubModule name="testpattern_inst" Register="38" Lut="59" T_Register="38(38)" T_Lut="59(59)"/>
- <SubModule name="u_vic" Register="38" Alu="15" Lut="44" T_Register="656(38)" T_Alu="73(15)" T_Lut="966(44)" T_Bsram="3(0)">
-  <SubModule name="u_vic" Register="571" Alu="31" Lut="894" Bsram="1" T_Register="571(571)" T_Alu="31(31)" T_Lut="894(894)" T_Bsram="1(1)"/>
-  <SubModule name="u_sd" Register="47" Alu="27" Lut="28" Bsram="2" T_Register="47(47)" T_Alu="27(27)" T_Lut="28(28)" T_Bsram="2(2)"/>
- </SubModule>
+<Module name="tang_primer_20k_top" Register="198" Alu="33" Lut="869" Bsram="2" Ssram="240" T_Register="3066(198)" T_Alu="564(33)" T_Lut="6490(869)" T_Bsram="42(2)" T_Ssram="258(240)">
+ <SubModule name="testpattern_inst" Register="38" Lut="62" T_Register="38(38)" T_Lut="62(62)"/>
  <SubModule name="u_tmds_rpll"/>
  <SubModule name="DVI_TX_Top_inst" Register="73" Alu="68" Lut="217" T_Register="73(73)" T_Alu="68(68)" T_Lut="217(217)"/>
+ <SubModule name="u_ram" Register="2" Lut="16" Bsram="32" T_Register="2(2)" T_Lut="16(16)" T_Bsram="32(32)"/>
+ <SubModule name="c64_inst" Register="60" Alu="4" Lut="102" T_Register="2755(60)" T_Alu="463(4)" T_Lut="5326(102)" T_Bsram="8(0)" T_Ssram="18(0)">
+  <SubModule name="colorram" Bsram="1" T_Bsram="1(1)"/>
+  <SubModule name="buslogic" Lut="31" T_Lut="31(31)" T_Bsram="6(0)">
+   <SubModule name="chargen" Bsram="2" T_Bsram="2(2)"/>
+   <SubModule name="kernal_loadable_rom" Bsram="4" T_Bsram="4(4)"/>
+  </SubModule>
+  <SubModule name="vic" Register="1434" Alu="109" Lut="1565" Ssram="2" T_Register="1434(1434)" T_Alu="109(109)" T_Lut="1565(1565)" T_Ssram="2(2)"/>
+  <SubModule name="c64colors" Lut="20" T_Lut="20(20)"/>
+  <SubModule name="yes_dual.sid" Register="126" Lut="153" Ssram="16" T_Register="521(126)" T_Alu="238(0)" T_Lut="1542(153)" T_Bsram="1(0)" T_Ssram="16(16)">
+   <SubModule name="chip[0].v1" Register="25" Alu="24" Lut="2" T_Register="25(25)" T_Alu="24(24)" T_Lut="2(2)"/>
+   <SubModule name="chip[0].v2" Register="25" Alu="24" Lut="2" T_Register="25(25)" T_Alu="24(24)" T_Lut="2(2)"/>
+   <SubModule name="chip[0].v3" Register="101" Alu="35" Lut="131" T_Register="138(101)" T_Alu="71(35)" T_Lut="216(131)">
+    <SubModule name="adsr" Register="37" Alu="36" Lut="85" T_Register="37(37)" T_Alu="36(36)" T_Lut="85(85)"/>
+   </SubModule>
+   <SubModule name="chip[1].v1" Register="25" Alu="24" Lut="2" T_Register="25(25)" T_Alu="24(24)" T_Lut="2(2)"/>
+   <SubModule name="chip[1].v2" Register="25" Alu="24" Lut="2" T_Register="25(25)" T_Alu="24(24)" T_Lut="2(2)"/>
+   <SubModule name="chip[1].v3" Register="101" Alu="35" Lut="122" T_Register="137(101)" T_Alu="71(35)" T_Lut="206(122)">
+    <SubModule name="adsr" Register="36" Alu="36" Lut="84" T_Register="36(36)" T_Alu="36(36)" T_Lut="84(84)"/>
+   </SubModule>
+   <SubModule name="sid_tables" Register="20" Lut="959" Bsram="1" T_Register="20(20)" T_Lut="959(959)" T_Bsram="1(1)"/>
+  </SubModule>
+  <SubModule name="cia1" Register="270" Alu="24" Lut="537" T_Register="270(270)" T_Alu="24(24)" T_Lut="537(537)"/>
+  <SubModule name="cia2" Register="263" Alu="24" Lut="521" T_Register="263(263)" T_Alu="24(24)" T_Lut="521(521)"/>
+  <SubModule name="cpu" Register="24" Lut="147" T_Register="191(24)" T_Alu="64(0)" T_Lut="992(147)">
+   <SubModule name="cpu" Register="167" Alu="44" Lut="617" T_Register="167(167)" T_Alu="64(44)" T_Lut="845(617)">
+    <SubModule name="mcode" Lut="103" T_Lut="103(103)"/>
+    <SubModule name="alu" Alu="20" Lut="125" T_Alu="20(20)" T_Lut="125(125)"/>
+   </SubModule>
+  </SubModule>
+  <SubModule name="Keyboard_inst" Register="16" Lut="16" T_Register="16(16)" T_Lut="16(16)"/>
+ </SubModule>
 </Module>

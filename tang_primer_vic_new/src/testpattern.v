@@ -30,11 +30,12 @@ module testpattern
     input	  [11:0]  I_v_sync    ,//ver sync time  
     input	  [11:0]  I_v_bporch  ,//ver back porch  
     input	  [11:0]  I_v_res     ,//ver resolution 
-    input			  I_hs_pol    ,//HS polarity , 0:negetive ploarity，1：positive polarity
-    input			  I_vs_pol    ,//VS polarity , 0:negetive ploarity，1：positive polarity
+    input			  I_hs_pol    ,//HS polarity , 0:negetive ploarity, 1:positive polarity
+    input			  I_vs_pol    ,//VS polarity , 0:negetive ploarity, 1:positive polarity
+    input             I_genlock_vs, // Genlock VSync input
     output			  O_de        ,   
-    output reg		  O_hs        ,//������
-    output reg		  O_vs        ,//������
+    output reg		  O_hs        ,
+    output reg		  O_vs        ,
     output	  [7:0]   O_data_r    ,    
     output	  [7:0]   O_data_g    ,
     output	  [7:0]   O_data_b    
@@ -71,25 +72,25 @@ wire 		  Vs_pos;
 	
 reg  [11:0]   De_vcnt     ;
 reg  [11:0]   De_hcnt     ;
-reg  [11:0]   De_hcnt_d1  ;
-reg  [11:0]   De_hcnt_d2  ;
+// reg  [11:0]   De_hcnt_d1  ; // Unused
+// reg  [11:0]   De_hcnt_d2  ; // Unused
 
 //-------------------------
-//Color bar //8ɫ����
+//Color bar
 reg  [11:0]   Color_trig_num; 
 reg           Color_trig    ;
 reg  [3:0]    Color_cnt     ;
 reg  [23:0]   Color_bar     ;
 
 //----------------------------
-//Net grid //32����
+//Net grid
 reg           Net_h_trig;
 reg           Net_v_trig;
 wire [1:0]    Net_pos   ;
 reg  [23:0]   Net_grid  ;
 
 //----------------------------
-//Gray  //�ڰ׻ҽ�
+//Gray
 reg  [23:0]   Gray;
 reg  [23:0]   Gray_d1;
 
@@ -100,13 +101,25 @@ wire [23:0]   Single_color;
 wire [23:0]   Data_sel;
 
 //-------------------------------
-reg  [23:0]   Data_tmp/*synthesis syn_keep=1*/;
+reg  [23:0]   Data_tmp /*synthesis syn_keep=1*/;
 
 //==============================================================================
+reg genlock_vs_d;
+always @(posedge I_pxl_clk or negedge I_rst_n) begin
+    if(!I_rst_n) genlock_vs_d <= 1'b0;
+    else         genlock_vs_d <= I_genlock_vs;
+end
+
+// Detect rising edge of Genlock VSync (assuming active high pulse from core)
+wire genlock_active;
+assign genlock_active = I_genlock_vs && !genlock_vs_d;
+
 //Generate HS, VS, DE signals
 always@(posedge I_pxl_clk or negedge I_rst_n)
 begin
 	if(!I_rst_n)
+		V_cnt <= 12'd0;
+	else if (genlock_active)
 		V_cnt <= 12'd0;
 	else     
 		begin
@@ -124,6 +137,8 @@ always @(posedge I_pxl_clk or negedge I_rst_n)
 begin
 	if(!I_rst_n)
 		H_cnt <=  12'd0; 
+    else if (genlock_active)
+        H_cnt <=  12'd0;
 	else if(H_cnt >= (I_h_total-1'b1))
 		H_cnt <=  12'd0 ; 
 	else 
@@ -153,7 +168,7 @@ begin
 		end
 end
 
-assign O_de = Pout_de_dn[4];//ע�������ݶ���
+assign O_de = Pout_de_dn[4];
 
 always@(posedge I_pxl_clk or negedge I_rst_n)
 begin
@@ -207,9 +222,9 @@ begin
 	if(!I_rst_n)
 		Color_trig_num <= 12'd0;
 	else if (Pout_de_dn[1] == 1'b0)
-		Color_trig_num <= I_h_res[11:3]; //8ɫ��������
+		Color_trig_num <= {1'b0, I_h_res[11:3]}; // Zero pad to match width if needed
 	else if ((Color_trig == 1'b1) && (Pout_de_dn[1] == 1'b1))
-		Color_trig_num <= Color_trig_num + I_h_res[11:3];
+		Color_trig_num <= Color_trig_num + {1'b0, I_h_res[11:3]};
 	else
 		Color_trig_num <= Color_trig_num;
 end
@@ -340,5 +355,4 @@ assign O_data_r = Data_tmp[ 7: 0];
 assign O_data_g = Data_tmp[15: 8];
 assign O_data_b = Data_tmp[23:16];
 
-endmodule       
-              
+endmodule

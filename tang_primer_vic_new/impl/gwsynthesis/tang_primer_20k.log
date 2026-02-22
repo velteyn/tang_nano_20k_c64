@@ -1,30 +1,118 @@
 GowinSynthesis start
 Running parser ...
-Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v'
-Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v'
-Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v'
 Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v'
 Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\testpattern.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v'
 Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v'
-Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd'
-Analyzing entity 'video_vicii_656x'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd":22)
-Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd":78)
-Compiling module 'TMDS_rPLL'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v":9)
-Compiling module '**'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v":1047)
-Compiling module 'DVI_TX_Top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v":1048)
-Compiling module 'scandoubler'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v":21)
-Extracting RAM for identifier 'sd_buffer'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v":142)
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\hdmi\audio_info_frame.sv'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\mos6526.v'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_filter.sv'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_envelope.sv'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_tables.sv'
+Analyzing Verilog file 'C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv'
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\video_vicII_656x.vhd'
+Analyzing entity 'video_vicii_656x'("C:\FPGA\workspace\tang_nano_20k_c64\src\video_vicII_656x.vhd":22)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\video_vicII_656x.vhd":78)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_cram.vhd'
+Analyzing entity 'gowin_sp_cram'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_cram.vhd":13)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_cram.vhd":26)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_chargen.vhd'
+Analyzing entity 'gowin_prom_chargen'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_chargen.vhd":13)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_chargen.vhd":24)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_basic.vhd'
+Analyzing entity 'gowin_prom_basic'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_basic.vhd":13)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_basic.vhd":24)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sdpb\gowin_sdpb_kernal_8k.vhd'
+Analyzing entity 'gowin_sdpb_kernal_8k'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sdpb\gowin_sdpb_kernal_8k.vhd":13)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sdpb\gowin_sdpb_kernal_8k.vhd":29)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_buslogic.vhd'
+Analyzing entity 'fpga64_buslogic'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_buslogic.vhd":25)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_buslogic.vhd":89)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_rgbcolor.vhd'
+Analyzing entity 'fpga64_rgbcolor'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_rgbcolor.vhd":20)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_rgbcolor.vhd":31)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_Pack.vhd'
+Analyzing package 't65_pack'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_Pack.vhd":55)
+Analyzing package body 't65_pack'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_Pack.vhd":154)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_MCode.vhd'
+Analyzing entity 't65_mcode'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_MCode.vhd":58)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_MCode.vhd":94)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_ALU.vhd'
+Analyzing entity 't65_alu'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_ALU.vhd":57)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_ALU.vhd":70)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65.vhd'
+Analyzing entity 't65'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65.vhd":134)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65.vhd":166)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\cpu_6510.vhd'
+Analyzing entity 'cpu_6510'("C:\FPGA\workspace\tang_nano_20k_c64\src\cpu_6510.vhd":23)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\cpu_6510.vhd":45)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_keyboard.vhd'
+Analyzing entity 'fpga64_keyboard'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_keyboard.vhd":36)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_keyboard.vhd":65)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd'
+Analyzing entity 'fpga64_sid_iec'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":43)
+Analyzing architecture 'rtl'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":178)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_2k.vhd'
+Analyzing entity 'gowin_sp_2k'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_2k.vhd":13)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_2k.vhd":26)
+Analyzing VHDL file 'C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_8k.vhd'
+Analyzing entity 'gowin_sp_8k'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_8k.vhd":13)
+Analyzing architecture 'behavioral'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_8k.vhd":26)
 Compiling module 'tang_primer_20k_top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":24)
-Extracting RAM for identifier 'linebuf0'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":170)
-Extracting RAM for identifier 'linebuf1'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":171)
+Extracting RAM for identifier 'linebuf0'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":189)
+Extracting RAM for identifier 'linebuf1'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":190)
 Compiling module 'testpattern'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\testpattern.v":17)
-Compiling module 'vic_ii_driver'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v":1)
-Switching to VHDL mode to elaborate design unit 'video_vicii_656x'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v":207)
-Processing 'video_vicii_656x(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\video_vicII_656x.vhd":22)
-Returning to Verilog mode to proceed with elaboration("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\vic_ii_driver.v":207)
-Compiling module 'scandoubler(HCNT_WIDTH=10)'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v":21)
-Extracting RAM for identifier 'sd_buffer'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\scandoubler.v":142)
-WARN  (EX3791) : Expression size 23 truncated to fit in target size 22("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":190)
+Compiling module 'TMDS_rPLL'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\TMDS_rPLL.v":9)
+Compiling module 'DVI_TX_Top'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v":1048)
+Compiling module '**'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\dvi_tx\dvi_tx.v":1047)
+Compiling module 'ram64k'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":551)
+Extracting RAM for identifier 'mem'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":560)
+Switching to VHDL mode to elaborate design unit 'fpga64_sid_iec'("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":547)
+Processing 'fpga64_sid_iec(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":43)
+Processing 'Gowin_SP_cram(Behavioral)'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sp\gowin_sp_cram.vhd":13)
+Processing 'fpga64_buslogic(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_buslogic.vhd":25)
+Processing 'Gowin_pROM_chargen(Behavioral)'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_chargen.vhd":13)
+Processing 'Gowin_pROM_basic(Behavioral)'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_prom\gowin_prom_basic.vhd":13)
+Processing 'Gowin_SDPB_kernal_8k(Behavioral)'("C:\FPGA\workspace\tang_nano_20k_c64\src\gowin_sdpb\gowin_sdpb_kernal_8k.vhd":13)
+'others' clause is never selected("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_buslogic.vhd":287)
+Processing 'video_vicii_656x(registeredaddress=true,emulaterefresh=true,emulatelightpen=true)(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\video_vicII_656x.vhd":22)
+Processing 'fpga64_rgbcolor(Behavioral)'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_rgbcolor.vhd":20)
+Switching to Verilog mode to elaborate module 'sid_top'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":740)
+Compiling module 'sid_top(DUAL=1)'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv":2)
+Extracting RAM for identifier '_st_out'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv":77)
+Extracting RAM for identifier 'p_t_out'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv":78)
+Extracting RAM for identifier 'ps__out'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv":79)
+Extracting RAM for identifier 'pst_out'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv":80)
+Compiling module 'sid_voice'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":1)
+Compiling module 'sid_envelope'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_envelope.sv":1)
+Compiling module 'sid_dac'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":47)
+WARN  (EX3780) : Using initial value of 'bit1' since it is never assigned("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":61)
+WARN  (EX3780) : Using initial value of 'bitval' since it is never assigned("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":126)
+Compiling module 'sid_dac(BITS=8)'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":47)
+WARN  (EX3780) : Using initial value of 'bit1' since it is never assigned("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":61)
+WARN  (EX3780) : Using initial value of 'bitval' since it is never assigned("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":126)
+Compiling module 'sid_tables'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_tables.sv":2)
+Compiling module 'sid_dac(BITS=11)'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":47)
+WARN  (EX3780) : Using initial value of 'bit1' since it is never assigned("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":61)
+WARN  (EX3780) : Using initial value of 'bitval' since it is never assigned("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_dac.sv":126)
+Compiling module 'sid_filter'("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_filter.sv":20)
+Returning to VHDL mode to continue with elaboration("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":740)
+Switching to Verilog mode to elaborate module 'mos6526'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":773)
+Compiling module 'mos6526'("C:\FPGA\workspace\tang_nano_20k_c64\src\mos6526.v":7)
+Returning to VHDL mode to continue with elaboration("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":773)
+Switching to Verilog mode to elaborate module 'mos6526'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":806)
+Returning to VHDL mode to continue with elaboration("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_sid_iec.vhd":806)
+Processing 'cpu_6510(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\cpu_6510.vhd":23)
+Processing 'T65(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65.vhd":134)
+Processing 'T65_MCode(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_MCode.vhd":58)
+'others' clause is never selected("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_MCode.vhd":1084)
+Processing 'T65_ALU(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\t65\T65_ALU.vhd":57)
+Processing 'fpga64_keyboard(rtl)'("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_keyboard.vhd":36)
+Returning to Verilog mode to proceed with elaboration("C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k_top.v":547)
 NOTE  (EX0101) : Current top module is "tang_primer_20k_top"
 [5%] Running netlist conversion ...
 Running device independent optimization ...
@@ -42,6 +130,25 @@ Running technical mapping ...
 [75%] Tech-Mapping Phase 2 completed
 [80%] Tech-Mapping Phase 3 completed
 [90%] Tech-Mapping Phase 4 completed
+WARN  (NL0002) : The module "Gowin_pROM_basic" instantiated to "basic_rom" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\fpga64_buslogic.vhd":136)
+WARN  (NL0002) : The module "sid_envelope" instantiated to "adsr" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":59)
+WARN  (NL0002) : The module "sid_dac" instantiated to "envelope_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":169)
+WARN  (NL0002) : The module "sid_dac" instantiated to "waveform_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":159)
+WARN  (NL0002) : The module "sid_envelope" instantiated to "adsr" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":59)
+WARN  (NL0002) : The module "sid_dac" instantiated to "envelope_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":169)
+WARN  (NL0002) : The module "sid_dac" instantiated to "waveform_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":159)
+WARN  (NL0002) : The module "sid_dac" instantiated to "envelope_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":169)
+WARN  (NL0002) : The module "sid_dac" instantiated to "waveform_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":159)
+WARN  (NL0002) : The module "sid_envelope" instantiated to "adsr" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":59)
+WARN  (NL0002) : The module "sid_dac" instantiated to "envelope_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":169)
+WARN  (NL0002) : The module "sid_dac" instantiated to "waveform_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":159)
+WARN  (NL0002) : The module "sid_envelope" instantiated to "adsr" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":59)
+WARN  (NL0002) : The module "sid_dac" instantiated to "envelope_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":169)
+WARN  (NL0002) : The module "sid_dac" instantiated to "waveform_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":159)
+WARN  (NL0002) : The module "sid_dac" instantiated to "envelope_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":169)
+WARN  (NL0002) : The module "sid_dac" instantiated to "waveform_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_voice.sv":159)
+WARN  (NL0002) : The module "sid_filter" instantiated to "sid_filter" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_top.sv":311)
+WARN  (NL0002) : The module "sid_dac" instantiated to "fc_dac" is swept in optimizing("C:\FPGA\workspace\tang_nano_20k_c64\src\sid\sid_tables.sv":765)
 [95%] Generate netlist file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\gwsynthesis\tang_primer_20k.vg" completed
 [100%] Generate report file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\gwsynthesis\tang_primer_20k_syn.rpt.html" completed
 GowinSynthesis finish

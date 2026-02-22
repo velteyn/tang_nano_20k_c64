@@ -2,6 +2,34 @@
  "Device" : "GW2A-18C",
  "Files" : [
   {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/mos6526.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_filter.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_tables.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+   "Type" : "verilog"
+  },
+  {
    "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/TMDS_rPLL.v",
    "Type" : "verilog"
   },
@@ -27,6 +55,81 @@
   },
   {
    "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/cpu_6510.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_buslogic.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_keyboard.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_rgbcolor.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_prom/gowin_prom_basic.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_prom/gowin_prom_chargen.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sdpb/gowin_sdpb_kernal_8k.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_2k.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_8k.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_cram.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_ALU.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_MCode.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_Pack.vhd",
+   "Type" : "vhdl"
+  },
+  {
+   "Library" : "work",
    "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/video_vicII_656x.vhd",
    "Type" : "vhdl"
   }
@@ -36,7 +139,7 @@
  ],
  "LoopLimit" : 2000,
  "ResultFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/impl/temp/rtl_parser.result",
- "Top" : "",
- "VerilogStd" : "verilog_2001",
- "VhdlStd" : "vhdl_93"
+ "Top" : "tang_primer_20k_top",
+ "VerilogStd" : "sysv",
+ "VhdlStd" : "vhdl_2008"
 }

@@ -16,8 +16,9 @@
         <Option type="output_file" value="C:\FPGA\workspace\tang_nano_20k_c64\tang_primer\impl\gwsynthesis\tang_primer_20k.vg"/>
         <Option type="print_all_synthesis_warning" value="0"/>
         <Option type="ram_rw_check" value="0"/>
+        <Option type="top_module" value="tang_primer_20k_top"/>
         <Option type="vcc" value="1.0"/>
-        <Option type="verilog_language" value="verilog-2001"/>
+        <Option type="verilog_language" value="sysv-2017"/>
         <Option type="vhdl_language" value="vhdl-1993"/>
     </OptionList>
 </Project>

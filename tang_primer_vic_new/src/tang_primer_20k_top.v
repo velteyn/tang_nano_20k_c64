@@ -43,12 +43,15 @@ wire        tp0_de_in ;
 wire [ 7:0] tp0_data_r/*synthesis syn_keep=1*/;
 wire [ 7:0] tp0_data_g/*synthesis syn_keep=1*/;
 wire [ 7:0] tp0_data_b/*synthesis syn_keep=1*/;
+wire        core_vs;
+wire        core_hs;
 
 reg         vs_r;
 reg  [9:0]  cnt_vs;
 
 // VIC-II integration (safe default off)
 localparam USE_VIC = 1'b1;
+localparam GENLOCK_USE_FALL = 1'b1;
 wire        vic_hs;
 wire        vic_vs;
 wire        vic_de;
@@ -94,16 +97,17 @@ testpattern testpattern_inst
     .I_single_r  (8'd0               ),
     .I_single_g  (8'd255             ),
     .I_single_b  (8'd0               ),
-    .I_h_total   (12'd1650           ),// 1280x720@60 total
-    .I_h_sync    (12'd40             ),// 1280x720@60 sync
-    .I_h_bporch  (12'd220            ),// 1280x720@60 back porch
-    .I_h_res     (12'd1280           ),// 1280x720@60 active
-    .I_v_total   (12'd750            ),// 1280x720@60 total
-    .I_v_sync    (12'd5              ),// 1280x720@60 sync
-    .I_v_bporch  (12'd20             ),// 1280x720@60 back porch
-    .I_v_res     (12'd720            ),// 1280x720@60 active
-    .I_hs_pol    (1'b1               ),// positive
-    .I_vs_pol    (1'b1               ),// positive
+    .I_h_total   (12'd1650           ),// 800x480@60 total
+    .I_h_sync    (12'd40             ),// 
+    .I_h_bporch  (12'd220            ),// 
+    .I_h_res     (12'd1280           ),// 800x480 active
+    .I_v_total   (12'd750            ),// Increased to >525 to ensure HDMI is slower than C64 (genlock targets blanking)
+    .I_v_sync    (12'd5              ),// 
+    .I_v_bporch  (12'd20             ),// Reduced BP to show top border
+    .I_v_res     (12'd720            ),// 
+    .I_hs_pol    (1'b1               ),// negative (standard for 480p)
+    .I_vs_pol    (1'b1               ),// negative (standard for 480p)
+    .I_genlock_vs(1'b0               ),
     .O_de        (tp0_de_in          ),   
     .O_hs        (tp0_hs_in          ),
     .O_vs        (tp0_vs_in          ),
@@ -149,7 +153,10 @@ assign vic_de = !(core_hs || core_vs); // Approximate DE
 
 
 
-localparam SRC_W = 640;
+localparam [9:0] SRC_W = 10'd640;
+localparam [11:0] ACTIVE_W = 12'd960;
+localparam [10:0] PILLAR_LEFT = 11'd160;
+localparam [10:0] PILLAR_RIGHT = 11'd1120;
 
 reg        vic_hs_d;
 always @(posedge pix_clk) vic_hs_d <= vic_hs;
@@ -283,37 +290,37 @@ always @(posedge pix_clk or negedge hdmi4_rst_n) begin
 end
 
 reg [9:0]  src_x_rd;
+reg [11:0] h_acc;
+wire [11:0] h_acc_sum = h_acc + 12'd640;
 reg [23:0] vic_pix_read;
 reg [7:0]  vic_r_720, vic_g_720, vic_b_720;
-reg [1:0] scale_cnt;
     always @(posedge pix_clk or negedge hdmi4_rst_n) begin
         if(!hdmi4_rst_n) begin
             src_x_rd <= 10'd0;
+            h_acc <= 12'd0;
             vic_pix_read <= 24'd0;
             vic_r_720 <= 8'd0;
             vic_g_720 <= 8'd0;
             vic_b_720 <= 8'd0;
-            scale_cnt <= 2'd0;
         end else begin
             if(tp0_de_in && !de_d) begin 
-                src_x_rd <= 10'd80; // Start reading from index 80 to center the image
-                scale_cnt <= 2'd0;
+                src_x_rd <= 10'd0;
+                h_acc <= 12'd0;
             end
             
             if(tp0_de_in) begin
-                // 3x Scaling Logic: Advance read pointer every 3 HDMI pixels
-                if (scale_cnt == 2'd2) begin
-                    scale_cnt <= 2'd0;
-                    if (src_x_rd < 10'd639) src_x_rd <= src_x_rd + 10'd1;
-                end else begin
-                    scale_cnt <= scale_cnt + 2'd1;
+                if (x_cnt >= PILLAR_LEFT && x_cnt < PILLAR_RIGHT) begin
+                    if (h_acc_sum >= ACTIVE_W) begin
+                        h_acc <= h_acc_sum - ACTIVE_W;
+                        if (src_x_rd < 10'd639) src_x_rd <= src_x_rd + 10'd1;
+                    end else begin
+                        h_acc <= h_acc_sum;
+                    end
                 end
 
                 vic_pix_read <= (!rd_bank) ? linebuf0[src_x_rd] : linebuf1[src_x_rd];
 
-                // Pillarbox: 160 pixels black on left/right to maintain 4:3 aspect ratio
-                // 1280 (16:9) - 960 (4:3) = 320. 320/2 = 160.
-                if (x_cnt < 11'd160 || x_cnt >= 11'd1120) begin
+                if (x_cnt < PILLAR_LEFT || x_cnt >= PILLAR_RIGHT) begin
                     vic_r_720 <= 8'd0;
                     vic_g_720 <= 8'd0;
                     vic_b_720 <= 8'd0;
@@ -383,8 +390,6 @@ wire ram_we;
 wire io_cycle;
 wire ext_cycle;
 wire refresh_sig;
-wire core_hs;
-wire core_vs;
 wire [7:0] core_r;
 wire [7:0] core_g;
 wire [7:0] core_b;

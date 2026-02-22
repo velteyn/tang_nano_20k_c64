@@ -3,7 +3,6 @@
 -pn GW2A-LV18PG256C8/I7
 -cst C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k.cst
 -cfg C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\pnr\device.cfg
--sdc C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\src\tang_primer_20k.sdc
 -bit
 -tr
 -ph

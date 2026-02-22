@@ -1,5 +1,13 @@
 [
  {
+  "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/scandoubler.v",
+  "InstLine" : 21,
+  "InstName" : "scandoubler",
+  "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/scandoubler.v",
+  "ModuleLine" : 21,
+  "ModuleName" : "scandoubler"
+ },
+ {
   "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
   "InstLine" : 24,
   "InstName" : "tang_primer_20k_top",
@@ -17,33 +25,7 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 129,
-    "InstName" : "u_vic",
-    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
-    "ModuleLine" : 1,
-    "ModuleName" : "vic_ii_driver",
-    "SubInsts" : [
-     {
-      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
-      "InstLine" : 155,
-      "InstName" : "u_vic",
-      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/video_vicII_656x.vhd",
-      "ModuleLine" : 22,
-      "ModuleName" : "video_vicii_656x"
-     },
-     {
-      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
-      "InstLine" : 235,
-      "InstName" : "u_sd",
-      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/scandoubler.v",
-      "ModuleLine" : 21,
-      "ModuleName" : "scandoubler"
-     }
-    ]
-   },
-   {
-    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 309,
+    "InstLine" : 349,
     "InstName" : "u_tmds_rpll",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/TMDS_rPLL.v",
     "ModuleLine" : 9,
@@ -51,7 +33,7 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 326,
+    "InstLine" : 366,
     "InstName" : "DVI_TX_Top_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
     "ModuleLine" : 1048,
@@ -66,7 +48,417 @@
       "ModuleName" : "~rgb2dvi.DVI_TX_Top"
      }
     ]
+   },
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 437,
+    "InstName" : "u_ram",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "ModuleLine" : 552,
+    "ModuleName" : "ram64k"
+   },
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 446,
+    "InstName" : "c64_inst",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+    "ModuleLine" : 43,
+    "ModuleName" : "fpga64_sid_iec",
+    "SubInsts" : [
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 431,
+      "InstName" : "colorram",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_cram.vhd",
+      "ModuleLine" : 13,
+      "ModuleName" : "Gowin_SP_cram"
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 446,
+      "InstName" : "buslogic",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_buslogic.vhd",
+      "ModuleLine" : 25,
+      "ModuleName" : "fpga64_buslogic",
+      "SubInsts" : [
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_buslogic.vhd",
+        "InstLine" : 126,
+        "InstName" : "chargen",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_prom/gowin_prom_chargen.vhd",
+        "ModuleLine" : 13,
+        "ModuleName" : "Gowin_pROM_chargen"
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_buslogic.vhd",
+        "InstLine" : 136,
+        "InstName" : "basic_rom",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_prom/gowin_prom_basic.vhd",
+        "ModuleLine" : 13,
+        "ModuleName" : "Gowin_pROM_basic"
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_buslogic.vhd",
+        "InstLine" : 160,
+        "InstName" : "kernal_loadable_rom",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sdpb/gowin_sdpb_kernal_8k.vhd",
+        "ModuleLine" : 13,
+        "ModuleName" : "Gowin_SDPB_kernal_8k"
+       }
+      ]
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 539,
+      "InstName" : "vic",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/video_vicII_656x.vhd",
+      "ModuleLine" : 22,
+      "ModuleName" : "video_vicii_656x"
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 587,
+      "InstName" : "c64colors",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_rgbcolor.vhd",
+      "ModuleLine" : 20,
+      "ModuleName" : "fpga64_rgbcolor"
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 701,
+      "InstName" : "yes_dual.sid",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+      "ModuleLine" : 2,
+      "ModuleName" : "sid_top",
+      "SubInsts" : [
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 108,
+        "InstName" : "chip[0].v1",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+        "ModuleLine" : 1,
+        "ModuleName" : "sid_voice",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 50,
+          "InstName" : "adsr",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+          "ModuleLine" : 1,
+          "ModuleName" : "sid_envelope"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 155,
+          "InstName" : "waveform_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 165,
+          "InstName" : "envelope_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 129,
+        "InstName" : "chip[0].v2",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+        "ModuleLine" : 1,
+        "ModuleName" : "sid_voice",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 50,
+          "InstName" : "adsr",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+          "ModuleLine" : 1,
+          "ModuleName" : "sid_envelope"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 155,
+          "InstName" : "waveform_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 165,
+          "InstName" : "envelope_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 150,
+        "InstName" : "chip[0].v3",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+        "ModuleLine" : 1,
+        "ModuleName" : "sid_voice",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 50,
+          "InstName" : "adsr",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+          "ModuleLine" : 1,
+          "ModuleName" : "sid_envelope"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 155,
+          "InstName" : "waveform_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 165,
+          "InstName" : "envelope_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 108,
+        "InstName" : "chip[1].v1",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+        "ModuleLine" : 1,
+        "ModuleName" : "sid_voice",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 50,
+          "InstName" : "adsr",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+          "ModuleLine" : 1,
+          "ModuleName" : "sid_envelope"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 155,
+          "InstName" : "waveform_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 165,
+          "InstName" : "envelope_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 129,
+        "InstName" : "chip[1].v2",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+        "ModuleLine" : 1,
+        "ModuleName" : "sid_voice",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 50,
+          "InstName" : "adsr",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+          "ModuleLine" : 1,
+          "ModuleName" : "sid_envelope"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 155,
+          "InstName" : "waveform_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 165,
+          "InstName" : "envelope_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 150,
+        "InstName" : "chip[1].v3",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+        "ModuleLine" : 1,
+        "ModuleName" : "sid_voice",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 50,
+          "InstName" : "adsr",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_envelope.sv",
+          "ModuleLine" : 1,
+          "ModuleName" : "sid_envelope"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 155,
+          "InstName" : "waveform_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_voice.sv",
+          "InstLine" : 165,
+          "InstName" : "envelope_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 243,
+        "InstName" : "sid_tables",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_tables.sv",
+        "ModuleLine" : 2,
+        "ModuleName" : "sid_tables",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_tables.sv",
+          "InstLine" : 761,
+          "InstName" : "fc_dac",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_dac.sv",
+          "ModuleLine" : 47,
+          "ModuleName" : "sid_dac"
+         }
+        ]
+       },
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_top.sv",
+        "InstLine" : 296,
+        "InstName" : "sid_filter",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/sid/sid_filter.sv",
+        "ModuleLine" : 20,
+        "ModuleName" : "sid_filter"
+       }
+      ]
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 745,
+      "InstName" : "cia1",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/mos6526.v",
+      "ModuleLine" : 7,
+      "ModuleName" : "mos6526"
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 775,
+      "InstName" : "cia2",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/mos6526.v",
+      "ModuleLine" : 7,
+      "ModuleName" : "mos6526"
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 853,
+      "InstName" : "cpu",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/cpu_6510.vhd",
+      "ModuleLine" : 23,
+      "ModuleName" : "cpu_6510",
+      "SubInsts" : [
+       {
+        "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/cpu_6510.vhd",
+        "InstLine" : 58,
+        "InstName" : "cpu",
+        "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65.vhd",
+        "ModuleLine" : 134,
+        "ModuleName" : "T65",
+        "SubInsts" : [
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65.vhd",
+          "InstLine" : 277,
+          "InstName" : "mcode",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_MCode.vhd",
+          "ModuleLine" : 58,
+          "ModuleName" : "T65_MCode"
+         },
+         {
+          "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65.vhd",
+          "InstLine" : 314,
+          "InstName" : "alu",
+          "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/t65/T65_ALU.vhd",
+          "ModuleLine" : 57,
+          "ModuleName" : "T65_ALU"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
+      "InstLine" : 925,
+      "InstName" : "Keyboard_inst",
+      "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_keyboard.vhd",
+      "ModuleLine" : 36,
+      "ModuleName" : "fpga64_keyboard"
+     }
+    ]
    }
   ]
+ },
+ {
+  "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+  "InstLine" : 1,
+  "InstName" : "vic_ii_driver",
+  "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+  "ModuleLine" : 1,
+  "ModuleName" : "vic_ii_driver",
+  "SubInsts" : [
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_ii_driver.v",
+    "InstLine" : 165,
+    "InstName" : "u_vic",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/video_vicII_656x.vhd",
+    "ModuleLine" : 22,
+    "ModuleName" : "video_vicii_656x"
+   }
+  ]
+ },
+ {
+  "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_2k.vhd",
+  "InstLine" : 13,
+  "InstName" : "Gowin_SP_2k",
+  "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_2k.vhd",
+  "ModuleLine" : 13,
+  "ModuleName" : "Gowin_SP_2k"
+ },
+ {
+  "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_8k.vhd",
+  "InstLine" : 13,
+  "InstName" : "Gowin_SP_8k",
+  "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_8k.vhd",
+  "ModuleLine" : 13,
+  "ModuleName" : "Gowin_SP_8k"
  }
 ]
