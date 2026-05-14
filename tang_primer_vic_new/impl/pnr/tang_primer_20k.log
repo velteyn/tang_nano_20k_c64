@@ -7,6 +7,7 @@ Running placement......
 [10%] Placement Phase 0 completed
 [20%] Placement Phase 1 completed
 [30%] Placement Phase 2 completed
+WARN  (TA1132) :  'c64_clk_reg' was determined to be a clock but was not created.
 WARN  (TA1132) :  'u_clkdiv/CLKOUT.default_gen_clk' was determined to be a clock but was not created.
 [50%] Placement Phase 3 completed
 Running routing......
@@ -26,5 +27,5 @@ Generate file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\pnr\
 Generate file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\pnr\tang_primer_20k.rpt.html" completed
 Generate file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\pnr\tang_primer_20k.rpt.txt" completed
 Generate file "C:\FPGA\workspace\tang_nano_20k_c64\tang_primer_vic_new\impl\pnr\tang_primer_20k.tr.html" completed
-Sun Feb 22 11:50:32 2026
+Sat Mar  7 18:22:25 2026
 

@@ -17,7 +17,7 @@
   "SubInsts" : [
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 89,
+    "InstLine" : 94,
     "InstName" : "testpattern_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/testpattern.v",
     "ModuleLine" : 17,
@@ -25,7 +25,15 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 349,
+    "InstLine" : 215,
+    "InstName" : "u_pass",
+    "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_hdmi_passthrough.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "vic_hdmi_passthrough"
+   },
+   {
+    "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
+    "InstLine" : 239,
     "InstName" : "u_tmds_rpll",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/TMDS_rPLL.v",
     "ModuleLine" : 9,
@@ -33,7 +41,7 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 366,
+    "InstLine" : 264,
     "InstName" : "DVI_TX_Top_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/dvi_tx/dvi_tx.v",
     "ModuleLine" : 1048,
@@ -51,15 +59,15 @@
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 437,
+    "InstLine" : 333,
     "InstName" : "u_ram",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "ModuleLine" : 552,
+    "ModuleLine" : 448,
     "ModuleName" : "ram64k"
    },
    {
     "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/tang_primer_20k_top.v",
-    "InstLine" : 446,
+    "InstLine" : 342,
     "InstName" : "c64_inst",
     "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/fpga64_sid_iec.vhd",
     "ModuleLine" : 43,
@@ -444,6 +452,14 @@
     "ModuleName" : "video_vicii_656x"
    }
   ]
+ },
+ {
+  "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_to_hdmi_adapter.v",
+  "InstLine" : 2,
+  "InstName" : "vic_to_hdmi_adapter",
+  "ModuleFile" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_to_hdmi_adapter.v",
+  "ModuleLine" : 2,
+  "ModuleName" : "vic_to_hdmi_adapter"
  },
  {
   "InstFile" : "C:/FPGA/workspace/tang_nano_20k_c64/src/gowin_sp/gowin_sp_2k.vhd",

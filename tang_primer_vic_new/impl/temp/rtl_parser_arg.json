@@ -54,6 +54,14 @@
    "Type" : "verilog"
   },
   {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_hdmi_passthrough.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/tang_primer_vic_new/src/vic_to_hdmi_adapter.v",
+   "Type" : "verilog"
+  },
+  {
    "Library" : "work",
    "Path" : "C:/FPGA/workspace/tang_nano_20k_c64/src/cpu_6510.vhd",
    "Type" : "vhdl"

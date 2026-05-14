@@ -37,6 +37,7 @@ reg  [31:0] run_cnt;
 wire        running;
 
 //--------------------------
+wire        genlock_vs_pulse;
 wire        tp0_vs_in  ;
 wire        tp0_hs_in  ;
 wire        tp0_de_in ;
@@ -51,6 +52,7 @@ reg  [9:0]  cnt_vs;
 
 // VIC-II integration (safe default off)
 localparam USE_VIC = 1'b1;
+localparam USE_VIC_SIM = 1'b1; // SET TO 1 FOR DEBUG SIMULATOR
 localparam GENLOCK_USE_FALL = 1'b1;
 wire        vic_hs;
 wire        vic_vs;
@@ -96,18 +98,18 @@ testpattern testpattern_inst
     .I_mode      ({1'b0,cnt_vs[9:8]} ),//data select
     .I_single_r  (8'd0               ),
     .I_single_g  (8'd255             ),
-    .I_single_b  (8'd0               ),
-    .I_h_total   (12'd1650           ),// 800x480@60 total
-    .I_h_sync    (12'd40             ),// 
-    .I_h_bporch  (12'd220            ),// 
-    .I_h_res     (12'd1280           ),// 800x480 active
-    .I_v_total   (12'd750            ),// Increased to >525 to ensure HDMI is slower than C64 (genlock targets blanking)
-    .I_v_sync    (12'd5              ),// 
-    .I_v_bporch  (12'd20             ),// Reduced BP to show top border
-    .I_v_res     (12'd720            ),// 
-    .I_hs_pol    (1'b1               ),// negative (standard for 480p)
-    .I_vs_pol    (1'b1               ),// negative (standard for 480p)
-    .I_genlock_vs(1'b0               ),
+    .I_single_b  (8'd0               ),                  //800x600    //1024x768   //1280x720    
+    .I_h_total   (12'd1650           ),//hor total time  // 12'd1056  // 12'd1344  // 12'd1650  
+    .I_h_sync    (12'd40             ),//hor sync time   // 12'd128   // 12'd136   // 12'd40    
+    .I_h_bporch  (12'd220            ),//hor back porch  // 12'd88    // 12'd160   // 12'd220   
+    .I_h_res     (12'd1280           ),//hor resolution  // 12'd800   // 12'd1024  // 12'd1280  
+    .I_v_total   (12'd750            ),//ver total time  // 12'd628   // 12'd806   // 12'd750    
+    .I_v_sync    (12'd5              ),//ver sync time   // 12'd4     // 12'd6     // 12'd5     
+    .I_v_bporch  (12'd20             ),//ver back porch  // 12'd23    // 12'd29    // 12'd20    
+    .I_v_res     (12'd720            ),//ver resolution  // 12'd600   // 12'd768   // 12'd720    
+    .I_hs_pol    (1'b1               ),//HS polarity , 0:negetive ploarity，1：positive polarity
+    .I_vs_pol    (1'b1               ),//VS polarity , 0:negetive ploarity，1：positive polarity
+    .I_genlock_vs(1'b0               ), // GENLOCK DISABLED
     .O_de        (tp0_de_in          ),   
     .O_hs        (tp0_hs_in          ),
     .O_vs        (tp0_vs_in          ),
@@ -143,207 +145,94 @@ vic_ii_driver u_vic (
 );
 */
 
+// VIC-II Simulator for Debugging (Now synchronized to pix_clk to stop rolling)
+reg [11:0] sim_h_cnt;
+reg [9:0]  sim_v_cnt;
+reg        sim_hs, sim_vs, sim_de;
+reg [7:0]  sim_r, sim_g, sim_b;
+
+always @(posedge pix_clk or negedge hdmi4_rst_n) begin
+    if(!hdmi4_rst_n) begin
+        sim_h_cnt <= 12'd0;
+        sim_v_cnt <= 10'd0;
+    end else begin
+        // Use EXACT same timing as HDMI (1650 x 750) to ensure zero drift
+        if(sim_h_cnt >= 12'd1649) begin 
+            sim_h_cnt <= 12'd0;
+            if(sim_v_cnt >= 10'd749) sim_v_cnt <= 10'd0;
+            else sim_v_cnt <= sim_v_cnt + 10'd1;
+        end else begin
+            sim_h_cnt <= sim_h_cnt + 12'd1;
+        end
+        
+        sim_hs <= (sim_h_cnt < 12'd40);
+        sim_vs <= (sim_v_cnt < 10'd5);
+        
+        // Active Area: 320x240 (standard retro resolution)
+        sim_de <= (sim_h_cnt >= 12'd200 && sim_h_cnt < 12'd520) && 
+                  (sim_v_cnt >= 10'd100 && sim_v_cnt < 10'd340);
+        
+        // White square in the middle of simulator active area
+        if(sim_h_cnt >= 12'd310 && sim_h_cnt < 12'd410 && 
+           sim_v_cnt >= 10'd170 && sim_v_cnt < 10'd270) begin
+            sim_r <= 8'd255; sim_g <= 8'd255; sim_b <= 8'd255;
+        end else begin
+            sim_r <= 8'd0; sim_g <= 8'd0; sim_b <= 8'd255; // Blue background
+        end
+    end
+end
+
 // Connect existing C64 core video signals to HDMI pipeline
-assign vic_hs = core_hs;
-assign vic_vs = core_vs;
-assign vic_r = core_r;
-assign vic_g = core_g;
-assign vic_b = core_b;
-assign vic_de = !(core_hs || core_vs); // Approximate DE
+assign vic_hs = USE_VIC_SIM ? sim_hs : core_hs;
+assign vic_vs = USE_VIC_SIM ? sim_vs : core_vs;
+assign vic_r  = USE_VIC_SIM ? sim_r  : core_r;
+assign vic_g  = USE_VIC_SIM ? sim_g  : core_g;
+assign vic_b  = USE_VIC_SIM ? sim_b  : core_b;
+
+// Precise DE generation using C64 core internal counters
+// rasterX < 396 (start of hBlanking) and rasterY < 300 (start of vBlanking)
+assign vic_de = USE_VIC_SIM ? sim_de : ((core_debugX < 10'd396) && (core_debugY < 9'd300));
 
 
-
-localparam [9:0] SRC_W = 10'd640;
-localparam [11:0] ACTIVE_W = 12'd960;
-localparam [10:0] PILLAR_LEFT = 11'd160;
-localparam [10:0] PILLAR_RIGHT = 11'd1120;
-
-reg        vic_hs_d;
-always @(posedge pix_clk) vic_hs_d <= vic_hs;
-wire       vic_hs_fall = vic_hs_d & ~vic_hs;
-
-reg [11:0] line_len_cnt     = 12'd0;
-reg [11:0] line_len_latched = 12'd860;
-reg        line_len_locked  = 1'b0;
-always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-    if(!hdmi4_rst_n) begin
-        line_len_cnt     <= 12'd0;
-        line_len_latched <= 12'd860;
-        line_len_locked  <= 1'b0;
-    end else begin
-        if(vic_hs_fall) begin
-            if(!line_len_locked && (line_len_cnt > 12'd200) && (line_len_cnt < 12'd2400)) begin
-                line_len_latched <= line_len_cnt;
-                line_len_locked  <= 1'b1;
-            end
-            line_len_cnt <= 12'd0;
-        end else begin
-            line_len_cnt <= line_len_cnt + 12'd1;
-        end
+reg [7:0]  genlock_pulse_cnt;
+reg        vs_d;
+always @(posedge pix_clk) begin
+    vs_d <= vic_vs;
+    if (~vs_d & vic_vs) begin // Rising edge of VIC VS
+        genlock_pulse_cnt <= 8'd128;
+    end else if (genlock_pulse_cnt != 8'd0) begin
+        genlock_pulse_cnt <= genlock_pulse_cnt - 8'd1;
     end
 end
+assign genlock_vs_pulse = (genlock_pulse_cnt != 8'd0);
 
-reg        wr_bank = 1'b0;
-reg [9:0]  wr_ptr  = 10'd0;
-reg [21:0] acc     = 22'd0;
-reg [23:0] linebuf0 [0:SRC_W-1];
-reg [23:0] linebuf1 [0:SRC_W-1];
-reg        commit_tgl = 1'b0;
-reg        commit_bank = 1'b0;
+// Replaced old accumulator scaling with vic_hdmi_passthrough wrapper
+wire [7:0] pass_r, pass_g, pass_b;
+wire c64_clk;
 
-always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-    if(!hdmi4_rst_n) begin
-        wr_bank   <= 1'b0;
-        wr_ptr    <= 10'd0;
-        acc       <= 22'd0;
-        commit_tgl<= 1'b0;
-    end else begin
-        if(vic_hs_fall) begin
-            wr_bank    <= ~wr_bank;
-            wr_ptr     <= 10'd0;
-            acc        <= 22'd0;
-            commit_tgl <= ~commit_tgl;
-            commit_bank<= wr_bank;
-        end else begin
-            if(wr_ptr < SRC_W) begin
-                acc <= acc + 22'd640;
-                if(acc >= line_len_latched) begin
-                    acc   <= acc - line_len_latched;
-                    if(!wr_bank) linebuf0[wr_ptr] <= {vic_r, vic_g, vic_b};
-                    else         linebuf1[wr_ptr] <= {vic_r, vic_g, vic_b};
-                    wr_ptr <= wr_ptr + 10'd1;
-                end
-            end
-        end
-    end
-end
 
-reg commit_sync0, commit_sync1, commit_sync2;
-reg commit_bank_s0, commit_bank_s1, commit_bank_s2;
-always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-    if(!hdmi4_rst_n) begin
-        commit_sync0 <= 1'b0;
-        commit_sync1 <= 1'b0;
-        commit_sync2 <= 1'b0;
-        commit_bank_s0 <= 1'b0;
-        commit_bank_s1 <= 1'b0;
-        commit_bank_s2 <= 1'b0;
-    end else begin
-        commit_sync0 <= commit_tgl;
-        commit_sync1 <= commit_sync0;
-        commit_sync2 <= commit_sync1;
-        commit_bank_s0 <= commit_bank;
-        commit_bank_s1 <= commit_bank_s0;
-        commit_bank_s2 <= commit_bank_s1;
-    end
-end
-wire new_line_available = commit_sync1 ^ commit_sync2;
-wire bank_of_commit     = commit_bank_s1;
 
-reg rd_bank = 1'b0;
-reg pending_line = 1'b0;
-wire de_rising;
-reg        de_d;
-assign de_rising = tp0_de_in & ~de_d;
-reg  rep_toggle = 1'b0;
-reg  rep_count  = 1'b0;
-reg  next_rd_bank = 1'b0;
-always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-    if(!hdmi4_rst_n) begin
-        rd_bank <= 1'b0;
-        pending_line <= 1'b0;
-        rep_toggle <= 1'b0;
-        rep_count  <= 1'b0;
-        next_rd_bank <= 1'b0;
-    end else begin
-        if(new_line_available) begin
-            pending_line <= 1'b1;
-            next_rd_bank <= bank_of_commit;
-        end
-        if(de_rising) begin
-            if(rep_count != 1'b0) begin
-                rep_count <= 1'b0;
-            end else if(pending_line) begin
-                rd_bank <= next_rd_bank;
-                pending_line <= 1'b0;
-                rep_toggle <= ~rep_toggle;
-                rep_count  <= rep_toggle ? 1'b0 : 1'b1;
-            end 
-        end
-    end
-end
+vic_hdmi_passthrough u_pass (
+    .pix_clk(pix_clk),
+    .rst_n(hdmi4_rst_n),
+    .vic_clk(c64_clk), 
+    .vic_hs(vic_hs),
+    .vic_vs(vic_vs),
+    .vic_de(vic_de),
+    .vic_r(vic_r),
+    .vic_g(vic_g),
+    .vic_b(vic_b),
+    .hdmi_de(tp0_de_in),
+    .hdmi_hs(tp0_hs_in),
+    .hdmi_vs(tp0_vs_in),
+    .hdmi_r(pass_r),
+    .hdmi_g(pass_g),
+    .hdmi_b(pass_b)
+);
 
-reg [10:0] x_cnt;
-always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-    if(!hdmi4_rst_n) begin
-        de_d <= 1'b0;
-        x_cnt <= 11'd0;
-    end else begin
-        de_d <= tp0_de_in;
-        if(tp0_de_in) begin
-            if(!de_d) x_cnt <= 11'd0;
-            else      x_cnt <= x_cnt + 11'd1;
-        end else begin
-            x_cnt <= 11'd0;
-        end
-    end
-end
-
-reg [9:0]  src_x_rd;
-reg [11:0] h_acc;
-wire [11:0] h_acc_sum = h_acc + 12'd640;
-reg [23:0] vic_pix_read;
-reg [7:0]  vic_r_720, vic_g_720, vic_b_720;
-    always @(posedge pix_clk or negedge hdmi4_rst_n) begin
-        if(!hdmi4_rst_n) begin
-            src_x_rd <= 10'd0;
-            h_acc <= 12'd0;
-            vic_pix_read <= 24'd0;
-            vic_r_720 <= 8'd0;
-            vic_g_720 <= 8'd0;
-            vic_b_720 <= 8'd0;
-        end else begin
-            if(tp0_de_in && !de_d) begin 
-                src_x_rd <= 10'd0;
-                h_acc <= 12'd0;
-            end
-            
-            if(tp0_de_in) begin
-                if (x_cnt >= PILLAR_LEFT && x_cnt < PILLAR_RIGHT) begin
-                    if (h_acc_sum >= ACTIVE_W) begin
-                        h_acc <= h_acc_sum - ACTIVE_W;
-                        if (src_x_rd < 10'd639) src_x_rd <= src_x_rd + 10'd1;
-                    end else begin
-                        h_acc <= h_acc_sum;
-                    end
-                end
-
-                vic_pix_read <= (!rd_bank) ? linebuf0[src_x_rd] : linebuf1[src_x_rd];
-
-                if (x_cnt < PILLAR_LEFT || x_cnt >= PILLAR_RIGHT) begin
-                    vic_r_720 <= 8'd0;
-                    vic_g_720 <= 8'd0;
-                    vic_b_720 <= 8'd0;
-                end else begin
-                    vic_r_720 <= vic_pix_read[23:16];
-                    vic_g_720 <= vic_pix_read[15:8];
-                    vic_b_720 <= vic_pix_read[7:0];
-                end
-            end else begin
-                vic_r_720 <= 8'd0;
-                vic_g_720 <= 8'd0;
-                vic_b_720 <= 8'd0;
-            end
-        end
-    end
-
-wire [7:0] src_r = USE_VIC ? vic_r_720 : tp0_data_r;
-wire [7:0] src_g = USE_VIC ? vic_g_720 : tp0_data_g;
-wire [7:0] src_b = USE_VIC ? vic_b_720 : tp0_data_b;
-
-wire [7:0] mux_r = src_r;
-wire [7:0] mux_g = src_g;
-wire [7:0] mux_b = src_b;
+wire [7:0] mux_r = pass_r;
+wire [7:0] mux_g = pass_g;
+wire [7:0] mux_b = pass_b;
 
 //==============================================================================
 //TMDS TX(HDMI4)
@@ -353,8 +242,6 @@ TMDS_rPLL u_tmds_rpll
 ,.lock      (pll_lock  )     //output lock
 );
 
-assign hdmi4_rst_n = I_rst_n & pll_lock;
-
 CLKDIV u_clkdiv
 (.RESETN(hdmi4_rst_n)
 ,.HCLKIN(serial_clk) //clk  x5
@@ -363,6 +250,16 @@ CLKDIV u_clkdiv
 );
 defparam u_clkdiv.DIV_MODE="5";
 defparam u_clkdiv.GSREN="false";
+
+// Manual divider for C64 clock (74.25 / 2 = 37.125 MHz)
+reg c64_clk_reg;
+always @(posedge pix_clk or negedge hdmi4_rst_n) begin
+    if(!hdmi4_rst_n) c64_clk_reg <= 1'b0;
+    else c64_clk_reg <= ~c64_clk_reg;
+end
+assign c64_clk = c64_clk_reg;
+
+assign hdmi4_rst_n = I_rst_n & pll_lock;
 
 DVI_TX_Top DVI_TX_Top_inst
 (
@@ -443,7 +340,7 @@ ram64k u_ram (
 );
 
 fpga64_sid_iec c64_inst (
-    .clk32(pix_clk),       // Using 31.5MHz (derived from HDMI PLL) for synchronous video and ~98% speed
+    .clk32(c64_clk),       
     .reset_n(hdmi4_rst_n),
     .bios(2'b00),
     .pause(1'b0),

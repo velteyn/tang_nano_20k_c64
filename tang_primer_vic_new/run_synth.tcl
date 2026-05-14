@@ -11,6 +11,7 @@ add_file src/testpattern.v
 add_file src/TMDS_rPLL.v
 add_file src/scandoubler.v
 add_file src/vic_ii_driver.v
+add_file src/vic_hdmi_passthrough.v
 add_file src/dvi_tx/dvi_tx.v
 add_file ..\\src\\hdmi\\audio_info_frame.sv
 add_file ..\\src\\video_vicII_656x.vhd
